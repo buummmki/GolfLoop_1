@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포인트 & 리워드 - GolfLoop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">⛳ GolfLoop</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">홈</a></li>
+                    <li><a href="golf-reviews.html" class="nav-link">골프장 후기</a></li>
+                    <li><a href="golf-search.html" class="nav-link">골프장 찾기</a></li>
+                    <li><a href="points-rewards.html" class="nav-link active">포인트 & 리워드</a></li>
+                    <li><a href="booking.html" class="nav-link">예약 & 부킹</a></li>
+                    <li><a href="mypage.html" class="nav-link">마이페이지</a></li>
+                </ul>
+            </nav>
+            <a href="#download" class="cta-button">앱 다운로드</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 헤더 -->
+        <section class="page-header">
+            <div class="container">
+                <h1>포인트 & 리워드</h1>
+                <p>골프 활동으로 포인트를 모으고 다양한 혜택을 받아보세요</p>
+            </div>
+        </section>
+
+        <!-- 포인트 현황 -->
+        <section class="section" style="background: #f8fbff;">
+            <div class="container">
+                <div class="points-overview">
+                    <div class="points-card main-points">
+                        <div class="points-header">
+                            <h3>💰 내 포인트</h3>
+                            <span class="points-amount" id="user-points">1,250P</span>
+                        </div>
+                        <div class="points-actions">
+                            <button class="btn-secondary" onclick="showPointHistory()">적립 내역</button>
+                            <button class="cta-button" onclick="showRewardShop()">상품 교환</button>
+                        </div>
+                    </div>
+
+                    <div class="points-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📝</div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="total-reviews">8</div>
+                                <div class="stat-label">작성한 후기</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📸</div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="total-photos">15</div>
+                                <div class="stat-label">공유한 사진</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👍</div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="total-likes">42</div>
+                                <div class="stat-label">받은 좋아요</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 포인트 적립 방법 -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">💎 포인트 적립 방법</h2>
+                <div class="earning-rules">
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <div class="rule-icon">✍️</div>
+                            <div class="rule-info">
+                                <h4>골프장 후기 작성</h4>
+                                <p class="rule-points">+150P</p>
+                                <p class="rule-desc">상세한 골프장 정보 공유 시</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">📸</div>
+                            <div class="rule-info">
+                                <h4>사진 첨부</h4>
+                                <p class="rule-points">+50P</p>
+                                <p class="rule-desc">후기에 사진 첨부 시 추가</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">👍</div>
+                            <div class="rule-info">
+                                <h4>좋아요 받기</h4>
+                                <p class="rule-points">+10P</p>
+                                <p class="rule-desc">내 후기가 좋아요 받을 때마다</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">📍</div>
+                            <div class="rule-info">
+                                <h4>위치 기반 정보</h4>
+                                <p class="rule-points">+20P</p>
+                                <p class="rule-desc">내 주변 골프장 정보 공유</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">🏆</div>
+                            <div class="rule-info">
+                                <h4>인기 후기 선정</h4>
+                                <p class="rule-points">+300P</p>
+                                <p class="rule-desc">주간 인기 후기로 선정 시</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">🎯</div>
+                            <div class="rule-info">
+                                <h4>예약 완료</h4>
+                                <p class="rule-points">+100P</p>
+                                <p class="rule-desc">GolfLoop을 통한 예약 완료</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 리워드 상품 -->
+        <section class="section" style="background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">🎁 리워드 상품</h2>
+                <div class="reward-tabs">
+                    <button class="tab-btn active" onclick="showRewardCategory('golf')">골프 용품</button>
+                    <button class="tab-btn" onclick="showRewardCategory('voucher')">상품권</button>
+                    <button class="tab-btn" onclick="showRewardCategory('discount')">할인 쿠폰</button>
+                </div>
+
+                <!-- 골프 용품 -->
+                <div id="golf-rewards" class="reward-category active">
+                    <div class="reward-grid">
+                        <div class="reward-item">
+                            <div class="reward-image">🏌️‍♂️</div>
+                            <div class="reward-info">
+                                <h4>골프 장갑</h4>
+                                <p class="reward-desc">프리미엄 가죽 골프 장갑</p>
+                                <p class="reward-price">500P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('golf-glove', 500)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">⛳</div>
+                            <div class="reward-info">
+                                <h4>골프 티</h4>
+                                <p class="reward-desc">나무 골프 티 50개 세트</p>
+                                <p class="reward-price">200P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('golf-tee', 200)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🎯</div>
+                            <div class="reward-info">
+                                <h4>골프공 세트</h4>
+                                <p class="reward-desc">프로용 골프공 12개</p>
+                                <p class="reward-price">800P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('golf-ball', 800)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">☂️</div>
+                            <div class="reward-info">
+                                <h4>골프 우산</h4>
+                                <p class="reward-desc">대형 골프 전용 우산</p>
+                                <p class="reward-price">1200P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('golf-umbrella', 1200)">교환하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 상품권 -->
+                <div id="voucher-rewards" class="reward-category">
+                    <div class="reward-grid">
+                        <div class="reward-item">
+                            <div class="reward-image">☕</div>
+                            <div class="reward-info">
+                                <h4>스타벅스 기프트카드</h4>
+                                <p class="reward-desc">5,000원권</p>
+                                <p class="reward-price">600P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('starbucks-5000', 600)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🍔</div>
+                            <div class="reward-info">
+                                <h4>배달의민족 상품권</h4>
+                                <p class="reward-desc">10,000원권</p>
+                                <p class="reward-price">1100P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('baemin-10000', 1100)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🛒</div>
+                            <div class="reward-info">
+                                <h4>쿠팡 상품권</h4>
+                                <p class="reward-desc">20,000원권</p>
+                                <p class="reward-price">2200P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('coupang-20000', 2200)">교환하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 할인 쿠폰 -->
+                <div id="discount-rewards" class="reward-category">
+                    <div class="reward-grid">
+                        <div class="reward-item">
+                            <div class="reward-image">🏌️</div>
+                            <div class="reward-info">
+                                <h4>골프장 예약 할인</h4>
+                                <p class="reward-desc">10% 할인 쿠폰</p>
+                                <p class="reward-price">300P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('golf-discount-10', 300)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🎌</div>
+                            <div class="reward-info">
+                                <h4>골프 용품 할인</h4>
+                                <p class="reward-desc">골프 용품 15% 할인</p>
+                                <p class="reward-price">400P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('equipment-discount-15', 400)">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🚗</div>
+                            <div class="reward-info">
+                                <h4>골프장 교통비 지원</h4>
+                                <p class="reward-desc">5,000원 교통비 할인</p>
+                                <p class="reward-price">250P</p>
+                            </div>
+                            <button class="reward-btn" onclick="exchangeReward('transport-5000', 250)">교환하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 포인트 내역 -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">📋 포인트 적립 내역</h2>
+                <div class="point-history" id="point-history">
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>골프장 후기 작성</h4>
+                            <p class="history-desc">스카이힐CC 후기 작성</p>
+                            <p class="history-date">2024-07-24 14:30</p>
+                        </div>
+                        <div class="history-points positive">+150P</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>사진 첨부</h4>
+                            <p class="history-desc">후기에 사진 3장 첨부</p>
+                            <p class="history-date">2024-07-24 14:30</p>
+                        </div>
+                        <div class="history-points positive">+50P</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>좋아요 받기</h4>
+                            <p class="history-desc">베어크릭CC 후기 좋아요</p>
+                            <p class="history-date">2024-07-23 16:45</p>
+                        </div>
+                        <div class="history-points positive">+10P</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>상품 교환</h4>
+                            <p class="history-desc">골프 장갑 교환</p>
+                            <p class="history-date">2024-07-22 10:20</p>
+                        </div>
+                        <div class="history-points negative">-500P</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 토스트 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // 리워드 카테고리 전환
+        function showRewardCategory(category) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.reward-category').forEach(cat => cat.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(category + '-rewards').classList.add('active');
+        }
+
+        // 포인트 내역 표시
+        function showPointHistory() {
+            document.querySelector('.point-history').scrollIntoView({ behavior: 'smooth' });
+            showToast('포인트 적립 내역을 확인하세요');
+        }
+
+        // 리워드 상품으로 이동
+        function showRewardShop() {
+            document.querySelector('.reward-grid').scrollIntoView({ behavior: 'smooth' });
+            showToast('교환 가능한 상품을 확인하세요');
+        }
+    </script>
+</body>
+</html> 

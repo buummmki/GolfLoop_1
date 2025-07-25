@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - GolfLoop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">⛳ GolfLoop</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">홈</a></li>
+                    <li><a href="golf-reviews.html" class="nav-link">골프장 후기</a></li>
+                    <li><a href="golf-search.html" class="nav-link">골프장 찾기</a></li>
+                    <li><a href="points-rewards.html" class="nav-link">포인트 & 리워드</a></li>
+                    <li><a href="booking.html" class="nav-link">예약 & 부킹</a></li>
+                    <li><a href="mypage.html" class="nav-link active">마이페이지</a></li>
+                </ul>
+            </nav>
+            <a href="#download" class="cta-button">앱 다운로드</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 헤더 -->
+        <section class="page-header">
+            <div class="container">
+                <h1>마이페이지</h1>
+                <p>내 골프 활동을 한눈에 관리하세요</p>
+            </div>
+        </section>
+
+        <!-- 프로필 개요 -->
+        <section class="section" style="background: #f8fbff;">
+            <div class="container">
+                <div class="profile-overview">
+                    <div class="profile-card">
+                        <div class="profile-avatar">👤</div>
+                        <div class="profile-info">
+                            <h3 id="user-name">김골프</h3>
+                            <p class="user-level">🏆 골드 회원</p>
+                            <p class="user-join-date">가입일: 2023.03.15</p>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="user-points">1,250</span>
+                                <span class="stat-label">포인트</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="user-reviews">8</span>
+                                <span class="stat-label">후기</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="user-bookings">15</span>
+                                <span class="stat-label">예약</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 마이페이지 메뉴 -->
+        <section class="section">
+            <div class="container">
+                <div class="mypage-menu">
+                    <div class="menu-grid">
+                        <div class="menu-item" onclick="showMyPageSection('reviews')">
+                            <div class="menu-icon">📝</div>
+                            <h4>내 후기</h4>
+                            <p>작성한 골프장 후기</p>
+                            <span class="menu-badge">8</span>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('bookings')">
+                            <div class="menu-icon">🎯</div>
+                            <h4>예약 내역</h4>
+                            <p>골프장 예약 기록</p>
+                            <span class="menu-badge">15</span>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('points')">
+                            <div class="menu-icon">💰</div>
+                            <h4>포인트</h4>
+                            <p>포인트 적립/사용 내역</p>
+                            <span class="menu-badge">1,250P</span>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('favorites')">
+                            <div class="menu-icon">❤️</div>
+                            <h4>찜한 골프장</h4>
+                            <p>관심 골프장 목록</p>
+                            <span class="menu-badge">5</span>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('friends')">
+                            <div class="menu-icon">👥</div>
+                            <h4>골프 친구</h4>
+                            <p>함께 라운드할 친구들</p>
+                            <span class="menu-badge">12</span>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('settings')">
+                            <div class="menu-icon">⚙️</div>
+                            <h4>설정</h4>
+                            <p>계정 및 앱 설정</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 내 후기 섹션 -->
+        <section class="section mypage-section" id="mypage-reviews">
+            <div class="container">
+                <h2 class="section-title">📝 내가 작성한 후기</h2>
+                <div class="my-reviews-list">
+                    <div class="my-review-item">
+                        <div class="review-header">
+                            <h4>스카이힐 컨트리클럽</h4>
+                            <div class="review-meta">
+                                <span class="review-date">2024-07-24</span>
+                                <span class="review-rating">⭐⭐⭐⭐⭐</span>
+                                <span class="review-likes">👍 12</span>
+                            </div>
+                        </div>
+                        <p class="review-content">뷰가 정말 환상적이에요! 코스도 잘 관리되어 있고 클럽하우스도 깔끔합니다.</p>
+                        <div class="review-actions">
+                            <button class="btn-secondary">수정</button>
+                            <button class="btn-secondary">삭제</button>
+                        </div>
+                    </div>
+                    
+                    <div class="my-review-item">
+                        <div class="review-header">
+                            <h4>베어크릭 골프클럽</h4>
+                            <div class="review-meta">
+                                <span class="review-date">2024-07-23</span>
+                                <span class="review-rating">⭐⭐⭐⭐</span>
+                                <span class="review-likes">👍 8</span>
+                            </div>
+                        </div>
+                        <p class="review-content">전체적으로 만족스러운 라운드였습니다. 다만 대기시간이 조금 길었어요.</p>
+                        <div class="review-actions">
+                            <button class="btn-secondary">수정</button>
+                            <button class="btn-secondary">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 예약 내역 섹션 -->
+        <section class="section mypage-section" id="mypage-bookings" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">🎯 예약 내역</h2>
+                <div class="booking-tabs">
+                    <button class="tab-btn active" onclick="showBookingTab('upcoming')">예정된 예약</button>
+                    <button class="tab-btn" onclick="showBookingTab('completed')">완료된 예약</button>
+                    <button class="tab-btn" onclick="showBookingTab('cancelled')">취소된 예약</button>
+                </div>
+
+                <div id="upcoming-bookings" class="booking-tab-content active">
+                    <div class="booking-list">
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>라데나 골프클럽</h4>
+                                <p class="booking-date">📅 2024-07-28 (일) 오전 8:00</p>
+                                <p class="booking-price">💰 130,000원</p>
+                                <span class="status confirmed">예약 확정</span>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="btn-secondary">예약 변경</button>
+                                <button class="cta-button">예약 확인서</button>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>오크밸리 컨트리클럽</h4>
+                                <p class="booking-date">📅 2024-08-03 (토) 오후 2:00</p>
+                                <p class="booking-price">💰 180,000원</p>
+                                <span class="status pending">결제 대기</span>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="btn-secondary">취소</button>
+                                <button class="cta-button">결제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="completed-bookings" class="booking-tab-content">
+                    <div class="booking-list">
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>스카이힐 컨트리클럽</h4>
+                                <p class="booking-date">📅 2024-07-24 (수) 오전 9:00</p>
+                                <p class="booking-price">💰 120,000원</p>
+                                <span class="status completed">라운드 완료</span>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 작성</button>
+                                <button class="cta-button">다시 예약</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cancelled-bookings" class="booking-tab-content">
+                    <div class="booking-list">
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>베어크릭 골프클럽</h4>
+                                <p class="booking-date">📅 2024-07-20 (토) 오전 10:00</p>
+                                <p class="booking-price">💰 150,000원</p>
+                                <span class="status cancelled">예약 취소</span>
+                            </div>
+                            <div class="booking-actions">
+                                <button class="cta-button">다시 예약</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 포인트 섹션 -->
+        <section class="section mypage-section" id="mypage-points" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">💰 포인트 관리</h2>
+                <div class="point-summary">
+                    <div class="point-card">
+                        <h3>보유 포인트</h3>
+                        <p class="point-amount">1,250P</p>
+                        <button class="cta-button" onclick="location.href='points-rewards.html'">포인트 사용하기</button>
+                    </div>
+                    <div class="point-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">이번 달 적립</span>
+                            <span class="stat-value">+450P</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">이번 달 사용</span>
+                            <span class="stat-value">-200P</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">총 적립</span>
+                            <span class="stat-value">3,680P</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 설정 섹션 -->
+        <section class="section mypage-section" id="mypage-settings" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">⚙️ 설정</h2>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <h4>개인정보 수정</h4>
+                        <p>이름, 연락처, 이메일 등 개인정보를 수정합니다</p>
+                        <button class="btn-secondary">수정하기</button>
+                    </div>
+                    <div class="setting-item">
+                        <h4>비밀번호 변경</h4>
+                        <p>계정 보안을 위해 비밀번호를 변경합니다</p>
+                        <button class="btn-secondary">변경하기</button>
+                    </div>
+                    <div class="setting-item">
+                        <h4>알림 설정</h4>
+                        <p>예약 알림, 포인트 적립 알림 등을 설정합니다</p>
+                        <div class="setting-options">
+                            <label><input type="checkbox" checked> 예약 알림</label>
+                            <label><input type="checkbox" checked> 포인트 적립 알림</label>
+                            <label><input type="checkbox"> 마케팅 정보 수신</label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <h4>앱 버전</h4>
+                        <p>GolfLoop v1.2.0</p>
+                        <button class="btn-secondary">업데이트 확인</button>
+                    </div>
+                    <div class="setting-item">
+                        <h4>고객센터</h4>
+                        <p>문의사항이나 도움이 필요하시면 연락해주세요</p>
+                        <button class="btn-secondary">문의하기</button>
+                    </div>
+                    <div class="setting-item">
+                        <h4>로그아웃</h4>
+                        <p>계정에서 로그아웃합니다</p>
+                        <button class="btn-secondary">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 토스트 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // 마이페이지 섹션 전환
+        function showMyPageSection(section) {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.mypage-section').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            
+            // 선택된 섹션 표시
+            document.getElementById('mypage-' + section).style.display = 'block';
+            
+            // 섹션으로 스크롤
+            document.getElementById('mypage-' + section).scrollIntoView({ behavior: 'smooth' });
+            
+            showToast(getSectionTitle(section) + ' 섹션으로 이동했습니다');
+        }
+
+        // 섹션 제목 반환
+        function getSectionTitle(section) {
+            const titles = {
+                'reviews': '내 후기',
+                'bookings': '예약 내역',
+                'points': '포인트',
+                'favorites': '찜한 골프장',
+                'friends': '골프 친구',
+                'settings': '설정'
+            };
+            return titles[section] || section;
+        }
+
+        // 예약 탭 전환
+        function showBookingTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.booking-tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-bookings').classList.add('active');
+        }
+
+        // 페이지 로드 시 기본으로 내 후기 섹션 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            showMyPageSection('reviews');
+        });
+    </script>
+</body>
+</html> 

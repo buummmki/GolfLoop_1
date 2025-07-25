@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GolfLoop - 골프 커뮤니티 플랫폼</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 네비게이션 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="#home">⛳ GolfLoop</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link active">홈</a></li>
+                    <li><a href="golf-reviews.html" class="nav-link">골프장 후기</a></li>
+                    <li><a href="golf-search.html" class="nav-link">골프장 찾기</a></li>
+                    <li><a href="points-rewards.html" class="nav-link">포인트 & 리워드</a></li>
+                    <li><a href="booking.html" class="nav-link">예약 & 부킹</a></li>
+                    <li><a href="mypage.html" class="nav-link">마이페이지</a></li>
+                </ul>
+            </nav>
+            <a href="#download" class="cta-button">앱 다운로드</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+        <!-- 히어로 섹션 - 위치 기반 리디자인 -->
+        <section id="home" class="section hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>골퍼들이 함께 만드는<br>골프장 정보</h1>
+                    <p class="subtitle">내 주변 골프장의 생생한 후기와 정보를 골퍼들과 나누어보세요</p>
+                    
+                    <!-- 위치 기반 액션 버튼 -->
+                    <div class="location-actions">
+                        <button class="location-btn primary" onclick="requestLocation()">
+                            <span class="location-icon">📍</span>
+                            <div>
+                                <div class="btn-title">내 주변 골프장 찾기</div>
+                                <div class="btn-subtitle">근처 골프장 정보 보기</div>
+                            </div>
+                        </button>
+                        <button class="location-btn secondary" onclick="location.href='golf-reviews.html'">
+                            <span class="location-icon">✍️</span>
+                            <div>
+                                <div class="btn-title">골프장 후기 작성</div>
+                                <div class="btn-subtitle">경험 공유하고 포인트 받기</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- 현재 위치 상태 -->
+                    <div class="location-status" id="location-status" style="display: none;">
+                        <div class="current-location">
+                            <span class="location-pin">📍</span>
+                            <span id="current-location-text">위치를 확인하는 중...</span>
+                        </div>
+                    </div>
+
+                    <!-- 근처 골프장 빠른 액세스 -->
+                    <div class="nearby-courses" id="nearby-courses" style="display: none;">
+                        <h3>📍 내 근처 골프장 (최신 정보)</h3>
+                        <div class="nearby-courses-grid" id="nearby-courses-list">
+                            <!-- 동적으로 생성될 근처 골프장 -->
+                        </div>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">생생한</span>
+                            <span class="stat-label">골프장 후기</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">내 주변</span>
+                            <span class="stat-label">골프장 정보</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">참여하면</span>
+                            <span class="stat-label">포인트 적립</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 주요 기능 섹션 -->
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">골프가 쉬워지는 이유</h2>
+                <p class="section-subtitle">GolfLoop만의 특별한 기능들을 만나보세요</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card" onclick="location.href='golf-search.html'" style="cursor: pointer;">
+                        <div class="feature-icon">🏌️</div>
+                        <h3>스마트 골프장 추천</h3>
+                        <p>AI 기반 맞춤 추천으로 나에게 딱 맞는 골프장을 찾아드립니다. 실력, 예산, 위치를 고려한 개인화된 추천을 받아보세요.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='booking.html'" style="cursor: pointer;">
+                        <div class="feature-icon">💰</div>
+                        <h3>최저가 보장</h3>
+                        <p>전국 골프장의 최신 요금을 비교하여 최저가를 보장합니다. 추가 할인 혜택까지 놓치지 마세요.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='booking.html'" style="cursor: pointer;">
+                        <div class="feature-icon">⚡</div>
+                        <h3>즉시 예약</h3>
+                        <p>복잡한 절차 없이 클릭 한 번으로 즉시 예약 완료. 최신 예약 현황을 확인하고 바로 티타임을 잡으세요.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='points-rewards.html'" style="cursor: pointer;">
+                        <div class="feature-icon">🎁</div>
+                        <h3>리워드 시스템</h3>
+                        <p>라운드할 때마다 포인트 적립! 적립된 포인트로 할인 혜택을 받고 다양한 골프 용품도 교환하세요.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='golf-reviews.html'" style="cursor: pointer;">
+                        <div class="feature-icon">⭐</div>
+                        <h3>실제 후기</h3>
+                        <p>실제 라운드 경험자들의 솔직한 후기를 확인하세요. 코스 컨디션부터 서비스까지 상세한 정보를 제공합니다.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='mypage.html'" style="cursor: pointer;">
+                        <div class="feature-icon">📱</div>
+                        <h3>모바일 최적화</h3>
+                        <p>언제 어디서나 편리하게! 모바일에 최적화된 인터페이스로 골프장 정보 확인부터 예약까지 간편하게.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 통계 섹션 -->
+        <section class="section stats-section">
+            <div class="container">
+                <h2 class="section-title">GolfLoop이 만든 변화</h2>
+                <p class="section-subtitle">숫자로 보는 우리의 성과</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">95%</div>
+                        <div class="label">고객 만족도</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">30분</div>
+                        <div class="label">평균 예약 시간</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">24시간</div>
+                        <div class="label">연중무휴 서비스</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">100%</div>
+                        <div class="label">예약 보장</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 골프장 후기 섹션 -->
+        <section id="golf-reviews" class="section">
+            <div class="container">
+                <h2 class="section-title">골프장 후기</h2>
+                <p class="section-subtitle">골퍼들의 생생한 후기를 공유하고 확인하세요</p>
+                
+                <!-- 후기 작성/보기 탭 -->
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="showReviewTab('view')">후기 보기</button>
+                    <button class="tab-btn" onclick="showReviewTab('write')">후기 작성</button>
+                </div>
+
+                <!-- 후기 보기 탭 -->
+                <div id="review-view-tab" class="tab-content active">
+                    <!-- 필터 섹션 -->
+                    <div class="filter-section">
+                        <select id="filter-region" class="filter-select">
+                            <option value="">전체 지역</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                            <option value="강원">강원</option>
+                            <option value="충청">충청</option>
+                            <option value="전라">전라</option>
+                            <option value="경상">경상</option>
+                            <option value="제주">제주</option>
+                        </select>
+                        <select id="filter-sort" class="filter-select">
+                            <option value="latest">최신순</option>
+                            <option value="popular">인기순</option>
+                            <option value="rating">평점순</option>
+                        </select>
+                        <input type="date" id="filter-date" class="filter-date">
+                    </div>
+
+                    <!-- 후기 목록 -->
+                    <div class="reviews-list" id="reviews-list">
+                        <!-- 동적으로 생성될 후기 목록 -->
+                    </div>
+                </div>
+
+                <!-- 위치 기반 후기 작성 탭 -->
+                <div id="review-write-tab" class="tab-content">
+                    <div class="location-write-container">
+                        <!-- 위치 기반 골프장 추천 -->
+                        <div class="location-recommendation" id="location-recommendation">
+                                                    <div class="location-header">
+                            <h3>📍 어느 골프장 후기를 작성하시나요?</h3>
+                            <button class="detect-location-btn" onclick="detectCurrentLocation()">
+                                <span class="location-pulse">📍</span>
+                                내 주변 골프장 찾기
+                            </button>
+                        </div>
+                            
+                            <!-- 추천 골프장 -->
+                            <div class="recommended-courses" id="recommended-courses" style="display: none;">
+                                <h4>🎯 내 주변 골프장 (가까운 순)</h4>
+                                <div class="courses-list" id="nearby-courses-for-review">
+                                    <!-- 동적으로 생성될 근처 골프장 목록 -->
+                                </div>
+                            </div>
+                            
+                            <!-- 수동 검색 -->
+                            <div class="manual-search">
+                                <div class="search-toggle">
+                                    <span>다른 골프장을 찾으시나요?</span>
+                                    <button class="toggle-search-btn" onclick="toggleManualSearch()">직접 검색</button>
+                                </div>
+                                <div class="manual-search-form" id="manual-search-form" style="display: none;">
+                                    <input type="text" id="manual-golf-search" placeholder="골프장명을 입력하세요" 
+                                           oninput="searchGolfCourses(this.value)">
+                                    <div class="search-results" id="manual-search-results"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 선택된 골프장 정보 -->
+                        <div class="selected-course-info" id="selected-course-info" style="display: none;">
+                            <div class="selected-course-card">
+                                <div class="course-info">
+                                    <h4 id="selected-course-name">선택된 골프장</h4>
+                                    <p id="selected-course-location">📍 위치 정보</p>
+                                    <p id="selected-course-distance">🚗 거리 정보</p>
+                                </div>
+                                <button class="change-course-btn" onclick="changeSelectedCourse()">변경</button>
+                            </div>
+                        </div>
+
+                        <!-- 골프장 후기 작성 폼 -->
+                        <form id="location-review-form" class="location-review-form" style="display: none;">
+                            <div class="form-section">
+                                <h3>🌿 이 골프장은 어떠셨나요?</h3>
+                                
+                                <!-- 빠른 상태 선택 -->
+                                <div class="quick-status-selection">
+                                    <h4>⚡ 간단 평가</h4>
+                                    <div class="status-chips">
+                                        <button type="button" class="status-chip" data-status="excellent" onclick="selectQuickStatus('excellent')">
+                                            🟢 최고
+                                        </button>
+                                        <button type="button" class="status-chip" data-status="good" onclick="selectQuickStatus('good')">
+                                            🔵 좋음
+                                        </button>
+                                        <button type="button" class="status-chip" data-status="normal" onclick="selectQuickStatus('normal')">
+                                            🟡 보통
+                                        </button>
+                                        <button type="button" class="status-chip" data-status="poor" onclick="selectQuickStatus('poor')">
+                                            🔴 나쁨
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 상세 정보 -->
+                                <div class="detail-info-grid">
+                                    <div class="form-group">
+                                        <label>🌱 그린 상태</label>
+                                        <select id="green-condition">
+                                            <option value="">선택하세요</option>
+                                            <option value="perfect">완벽함</option>
+                                            <option value="good">좋음</option>
+                                            <option value="fair">보통</option>
+                                            <option value="poor">나쁨</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>🏌️ 페어웨이 상태</label>
+                                        <select id="fairway-condition">
+                                            <option value="">선택하세요</option>
+                                            <option value="perfect">완벽함</option>
+                                            <option value="good">좋음</option>
+                                            <option value="fair">보통</option>
+                                            <option value="poor">나쁨</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>🌤️ 날씨</label>
+                                        <select id="weather-condition">
+                                            <option value="">선택하세요</option>
+                                            <option value="sunny">맑음</option>
+                                            <option value="cloudy">흐림</option>
+                                            <option value="rainy">비</option>
+                                            <option value="windy">바람</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>⏰ 대기시간</label>
+                                        <select id="waiting-time">
+                                            <option value="">선택하세요</option>
+                                            <option value="none">없음</option>
+                                            <option value="short">짧음 (10분 이하)</option>
+                                            <option value="medium">보통 (10-30분)</option>
+                                            <option value="long">김 (30분 이상)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 사진 업로드 -->
+                                <div class="form-group">
+                                    <label for="realtime-photos">📸 골프장 사진 (최대 5장)</label>
+                                    <div class="photo-upload-area" onclick="document.getElementById('realtime-photos').click()">
+                                        <input type="file" id="realtime-photos" multiple accept="image/*" max="5" style="display: none;">
+                                        <div class="upload-placeholder">
+                                            <span class="upload-icon">📷</span>
+                                            <p>골프장 모습을 사진으로 공유해주세요</p>
+                                            <small>+50P 추가 적립!</small>
+                                        </div>
+                                    </div>
+                                    <div class="photo-preview" id="realtime-photo-preview"></div>
+                                </div>
+
+                                <!-- 간단 메모 -->
+                                <div class="form-group">
+                                    <label for="quick-memo">✍️ 간단한 메모</label>
+                                    <textarea id="quick-memo" rows="4" placeholder="지금 이 골프장에 대한 간단한 메모를 남겨주세요 (선택사항)"></textarea>
+                                </div>
+
+                                <!-- 회원 공유 알림 -->
+                                <div class="realtime-notice">
+                                    <div class="notice-content">
+                                        <span class="notice-icon">⚡</span>
+                                        <div>
+                                            <strong>골퍼들과 정보 나누기</strong>
+                                            <p>다른 골퍼들이 골프장 정보를 확인할 수 있도록 공유됩니다!</p>
+                                        </div>
+                                    </div>
+                                    <div class="point-reward">
+                                        <span class="reward-amount">+150P</span>
+                                        <small>소중한 정보 공유</small>
+                                    </div>
+                                </div>
+
+                                <!-- 제출 버튼 -->
+                                <div class="form-actions">
+                                    <button type="submit" class="cta-button realtime-submit">
+                                        ⚡ 후기 공유하기
+                                    </button>
+                                    <button type="button" class="btn-secondary" onclick="cancelLocationReview()">취소</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 골프장 찾기 섹션 -->
+        <section id="golf-search" class="section">
+            <div class="container">
+                <h2 class="section-title">골프장 찾기</h2>
+                <p class="section-subtitle">원하는 조건으로 골프장을 찾아보세요</p>
+                
+                <div class="search-form">
+                    <div class="search-tabs">
+                        <button class="search-tab-btn active" onclick="showSearchTab('region')">지역별 검색</button>
+                        <button class="search-tab-btn" onclick="showSearchTab('name')">골프장명 검색</button>
+                        <button class="search-tab-btn" onclick="showSearchTab('date')">날짜별 검색</button>
+                    </div>
+
+                    <!-- 지역별 검색 -->
+                    <div id="region-search" class="search-tab-content active">
+                        <div class="region-grid">
+                            <div class="region-card" onclick="searchByRegion('서울')">
+                                <div class="region-icon">🏙️</div>
+                                <h3>서울</h3>
+                                <p>25개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('경기')">
+                                <div class="region-icon">🌳</div>
+                                <h3>경기</h3>
+                                <p>87개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('인천')">
+                                <div class="region-icon">🌊</div>
+                                <h3>인천</h3>
+                                <p>15개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('강원')">
+                                <div class="region-icon">⛰️</div>
+                                <h3>강원</h3>
+                                <p>42개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('충청')">
+                                <div class="region-icon">🌾</div>
+                                <h3>충청</h3>
+                                <p>38개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('전라')">
+                                <div class="region-icon">🌸</div>
+                                <h3>전라</h3>
+                                <p>31개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('경상')">
+                                <div class="region-icon">🏔️</div>
+                                <h3>경상</h3>
+                                <p>56개 골프장</p>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('제주')">
+                                <div class="region-icon">🏝️</div>
+                                <h3>제주</h3>
+                                <p>18개 골프장</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 골프장명 검색 -->
+                    <div id="name-search" class="search-tab-content">
+                        <div class="search-input-group">
+                            <input type="text" id="golf-course-search" placeholder="골프장명을 입력하세요" class="search-input">
+                            <button class="cta-button" onclick="searchByName()">검색</button>
+                        </div>
+                    </div>
+
+                    <!-- 날짜별 검색 -->
+                    <div id="date-search" class="search-tab-content">
+                        <div class="date-search-form">
+                            <input type="date" id="search-date" class="search-input">
+                            <select id="search-time" class="search-input">
+                                <option value="">시간 선택</option>
+                                <option value="06:00">06:00</option>
+                                <option value="07:00">07:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                            </select>
+                            <button class="cta-button" onclick="searchByDate()">검색</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 검색 결과 -->
+                <div class="search-results" id="search-results">
+                    <!-- 동적으로 생성될 검색 결과 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 포인트 & 리워드 섹션 -->
+        <section id="points-rewards" class="section" style="background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">포인트 & 리워드</h2>
+                <p class="section-subtitle">후기 작성하고 포인트 적립하세요</p>
+                
+                <div class="points-overview">
+                    <div class="points-card">
+                        <div class="points-header">
+                            <h3>내 포인트</h3>
+                            <div class="points-amount" id="user-points">1,250</div>
+                        </div>
+                        <div class="points-actions">
+                            <button class="cta-button" onclick="showPointHistory()">적립 내역</button>
+                            <button class="btn-secondary" onclick="showRewardShop()">포인트 사용</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="earning-rules">
+                    <h3>포인트 적립 방법</h3>
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <div class="rule-icon">✍️</div>
+                            <div class="rule-info">
+                                <h4>후기 작성</h4>
+                                <p>+100P</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">📸</div>
+                            <div class="rule-info">
+                                <h4>사진 첨부</h4>
+                                <p>+50P</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">👍</div>
+                            <div class="rule-info">
+                                <h4>좋아요 받기</h4>
+                                <p>+10P</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon">📅</div>
+                            <div class="rule-info">
+                                <h4>예약 완료</h4>
+                                <p>+200P</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-shop" id="reward-shop">
+                    <h3>리워드 상품</h3>
+                    <div class="reward-grid">
+                        <div class="reward-item">
+                            <div class="reward-image">🏌️‍♂️</div>
+                            <h4>프리미엄 골프공 세트</h4>
+                            <p class="reward-price">500P</p>
+                            <button class="btn-secondary" onclick="exchangeReward('golf-balls')">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🧤</div>
+                            <h4>골프 장갑</h4>
+                            <p class="reward-price">800P</p>
+                            <button class="btn-secondary" onclick="exchangeReward('gloves')">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🎯</div>
+                            <h4>목재 티 세트</h4>
+                            <p class="reward-price">300P</p>
+                            <button class="btn-secondary" onclick="exchangeReward('tees')">교환하기</button>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-image">🎫</div>
+                            <h4>그린피 할인 쿠폰</h4>
+                            <p class="reward-price">1,000P</p>
+                            <button class="btn-secondary" onclick="exchangeReward('coupon')">교환하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 예약 & 부킹 섹션 -->
+        <section id="booking" class="section">
+            <div class="container">
+                <h2 class="section-title">예약 & 부킹</h2>
+                <p class="section-subtitle">간편하게 골프장을 예약하세요</p>
+                
+                <div class="booking-channels">
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">⛳</div>
+                            <h3>골팡 예약</h3>
+                        </div>
+                        <p>대중제 골프장 예약</p>
+                        <ul>
+                            <li>빠른 예약 가능</li>
+                            <li>다양한 할인 혜택</li>
+                            <li>즉시 예약 확정</li>
+                        </ul>
+                        <button class="cta-button" onclick="openBookingChannel('golfang')">골팡으로 예약</button>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">💬</div>
+                            <h3>카카오골프 예약</h3>
+                        </div>
+                        <p>프리미엄 골프장 예약</p>
+                        <ul>
+                            <li>프리미엄 골프장</li>
+                            <li>카카오페이 간편결제</li>
+                            <li>포인트 적립</li>
+                        </ul>
+                        <button class="cta-button" onclick="openBookingChannel('kakao')">카카오골프로 예약</button>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">🏆</div>
+                            <h3>회원제 골프</h3>
+                        </div>
+                        <p>회원제 골프장 예약</p>
+                        <ul>
+                            <li>최고급 골프장</li>
+                            <li>멤버십 혜택</li>
+                            <li>VIP 서비스</li>
+                        </ul>
+                        <button class="cta-button" onclick="openBookingChannel('membership')">회원제 골프 예약</button>
+                    </div>
+                </div>
+
+                <div class="booking-history" id="booking-history">
+                    <h3>나의 예약 내역</h3>
+                    <div class="history-list">
+                        <!-- 동적으로 생성될 예약 내역 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 마이페이지 섹션 -->
+        <section id="mypage" class="section" style="background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">마이페이지</h2>
+                <p class="section-subtitle">나의 골프 활동을 관리하세요</p>
+                
+                <div class="profile-overview">
+                    <div class="profile-card">
+                        <div class="profile-avatar">👤</div>
+                        <div class="profile-info">
+                            <h3 id="user-name">김골프</h3>
+                            <p>골프 애호가 · 가입일: 2024.01.15</p>
+                            <p>보유 포인트: <span id="user-points-display">1,250P</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mypage-menu">
+                    <div class="menu-grid">
+                        <div class="menu-item" onclick="showMyPageSection('my-reviews')">
+                            <div class="menu-icon">📝</div>
+                            <h4>나의 후기</h4>
+                            <p>작성한 후기 관리</p>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('point-management')">
+                            <div class="menu-icon">💰</div>
+                            <h4>포인트 관리</h4>
+                            <p>포인트 내역 확인</p>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('bookings')">
+                            <div class="menu-icon">📅</div>
+                            <h4>예약 내역</h4>
+                            <p>예약 현황 관리</p>
+                        </div>
+                        <div class="menu-item" onclick="showMyPageSection('settings')">
+                            <div class="menu-icon">⚙️</div>
+                            <h4>설정</h4>
+                            <p>계정 및 알림 설정</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mypage-content" id="mypage-content">
+                    <!-- 동적으로 생성될 마이페이지 컨텐츠 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA 섹션 -->
+        <section class="section" style="text-align: center; background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">지금 시작하세요</h2>
+                <p class="section-subtitle">GolfLoop과 함께 새로운 골프 경험을 만들어보세요</p>
+                
+                <div class="app-download-buttons">
+                    <a href="#" class="download-btn">
+                        <span>📱</span>
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.8;">App Store</div>
+                            <div>iOS 다운로드</div>
+                        </div>
+                    </a>
+                    <a href="#" class="download-btn">
+                        <span>🤖</span>
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.8;">Google Play</div>
+                            <div>Android 다운로드</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 카카오 지도 SDK (실제 API 키 적용됨) -->
+    <script type="text/javascript" 
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=25171caa731cc576b1f8345acdebfcb9&libraries=services,clusterer">
+    </script>
+    
+    <!-- GolfLoop API 서비스들 -->
+    <script src="config/api-config.js"></script>
+    <script src="services/location-service.js"></script>
+    <script src="services/map-service.js"></script>
+    <script src="services/review-location-service.js"></script>
+    
+    <!-- 기존 스크립트 -->
+    <script src="script.js"></script>
+
+    <!-- 위치 기반 기능 초기화 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏌️ GolfLoop - Golf Community Platform Loaded');
+            console.log('📍 위치 기반 API 서비스 활성화됨');
+            
+            // 골프장 선택 이벤트 리스너
+            window.addEventListener('golfCourseSelected', function(event) {
+                const course = event.detail;
+                console.log('이벤트: 골프장 선택됨', course.name);
+                
+                // 선택된 골프장 정보를 전역 변수에 저장
+                window.selectedGolfCourse = course;
+                
+                // UI 업데이트 (필요한 경우)
+                showToast(`${course.name} 선택됨`);
+            });
+        });
+
+        // 향상된 위치 기반 골프장 찾기
+        async function requestLocation() {
+            try {
+                showToast('내 주변 골프장을 찾는 중...');
+                
+                // 사용자 위치 가져오기
+                const userLocation = await window.LocationService.getUserLocation();
+                
+                // 주변 골프장 검색
+                const nearbyGolfCourses = await window.LocationService.searchNearbyGolfCourses(
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    10000 // 10km 반경
+                );
+
+                // 기존 함수에 실제 데이터 전달
+                showNearbyGolfCourses(nearbyGolfCourses);
+                
+                showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+                
+            } catch (error) {
+                console.error('위치 기반 검색 실패:', error);
+                let message = '위치를 확인할 수 없습니다.';
+                
+                if (error.message.includes('권한')) {
+                    message = '위치 권한이 필요합니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+                } else if (error.message.includes('시간')) {
+                    message = '위치 확인에 시간이 오래 걸리고 있습니다.';
+                }
+                
+                showToast(`⚠️ ${message}`);
+                
+                // 기본 더미 데이터로 대체
+                showNearbyGolfCourses(nearbyGolfCourses);
+            }
+        }
+
+        // 향상된 후기 작성 위치 감지
+        async function detectCurrentLocation() {
+            try {
+                const recommendations = await window.ReviewLocationService.detectAndRecommendGolfCourses();
+                showToast(`✅ ${recommendations.length}개 골프장을 추천합니다!`);
+                
+            } catch (error) {
+                console.error('위치 기반 추천 실패:', error);
+                showToast('⚠️ 위치를 확인할 수 없어 수동 검색을 사용해주세요.');
+            }
+        }
+
+        // 지역별 골프장 검색 (실제 API 연동)
+        async function searchByRegion(region) {
+            try {
+                showToast(`${region} 지역의 골프장을 검색 중...`);
+                
+                const golfCourses = await window.LocationService.searchGolfCoursesByRegion(region);
+                
+                // 검색 결과 표시
+                displaySearchResults(golfCourses, `${region} 지역 골프장`);
+                
+                showToast(`✅ ${golfCourses.length}개 골프장을 찾았습니다!`);
+                
+            } catch (error) {
+                console.error('지역 검색 실패:', error);
+                showToast('⚠️ 검색 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 골프장명 검색 (실제 API 연동)
+        async function searchByName(query) {
+            if (!query || query.trim().length < 2) {
+                showToast('골프장명을 2글자 이상 입력해주세요.');
+                return;
+            }
+            
+            try {
+                showToast('골프장을 검색 중...');
+                
+                const golfCourses = await window.LocationService.searchGolfCourseByName(query.trim());
+                
+                // 검색 결과 표시
+                displaySearchResults(golfCourses, `"${query}" 검색 결과`);
+                
+                showToast(`✅ ${golfCourses.length}개 골프장을 찾았습니다!`);
+                
+            } catch (error) {
+                console.error('이름 검색 실패:', error);
+                showToast('⚠️ 검색 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 검색 결과 표시 헬퍼 함수
+        function displaySearchResults(golfCourses, title) {
+            const resultsContainer = document.getElementById('search-results-list');
+            const resultsTitle = document.getElementById('results-title');
+            const resultsSection = document.getElementById('search-results');
+            
+            if (resultsTitle) {
+                resultsTitle.textContent = title;
+            }
+            
+            if (resultsContainer) {
+                loadSearchResults(golfCourses);
+            }
+            
+            if (resultsSection) {
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // API 상태 확인 (개발용)
+        function checkApiStatus() {
+            const hasKakao = typeof kakao !== 'undefined';
+            const hasConfig = typeof window.GolfLoopAPI !== 'undefined';
+            const hasServices = typeof window.LocationService !== 'undefined';
+            
+            console.log('📊 API 상태 체크:');
+            console.log('- 카카오 SDK:', hasKakao ? '✅' : '❌');
+            console.log('- API 설정:', hasConfig ? '✅' : '❌');
+            console.log('- 위치 서비스:', hasServices ? '✅' : '❌');
+            
+            if (!hasKakao) {
+                console.warn('⚠️ 카카오 지도 SDK가 로드되지 않았습니다. API 키를 확인해주세요.');
+            }
+        }
+
+        // 개발 환경에서 API 상태 확인
+        setTimeout(checkApiStatus, 1000);
+    </script>
+</body>
+</html> 

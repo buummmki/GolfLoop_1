@@ -1,0 +1,1590 @@
+/* Finda/Toss 스타일 모던 핀테크 디자인 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #ffffff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 헤더 네비게이션 - Finda 스타일 */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+    align-items: center;
+}
+
+.nav-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 0;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #333;
+}
+
+.nav-link.active {
+    color: #0066ff;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0066ff;
+    border-radius: 1px;
+}
+
+.cta-button {
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+}
+
+/* 히어로 섹션 - Finda 메인 스타일 */
+.hero-section {
+    padding: 120px 0 80px;
+    background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    line-height: 1.2;
+}
+
+.hero-content .subtitle {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+/* 위치 기반 액션 버튼 */
+.location-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.location-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.location-btn.primary {
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    color: white;
+    box-shadow: 0 8px 30px rgba(0, 102, 255, 0.3);
+}
+
+.location-btn.secondary {
+    background: white;
+    color: #0066ff;
+    border: 2px solid #0066ff;
+    box-shadow: 0 4px 20px rgba(0, 102, 255, 0.1);
+}
+
+.location-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 102, 255, 0.4);
+}
+
+.location-btn.primary:hover {
+    background: linear-gradient(135deg, #0052d9, #0041c7);
+}
+
+.location-btn.secondary:hover {
+    background: #f8fbff;
+}
+
+.location-icon {
+    font-size: 24px;
+}
+
+.btn-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.btn-subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* 위치 상태 */
+.location-status {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.current-location {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #0066ff;
+}
+
+.location-pin {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 근처 골프장 */
+.nearby-courses {
+    margin-top: 40px;
+    text-align: left;
+}
+
+.nearby-courses h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.nearby-courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.nearby-course-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.nearby-course-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: #0066ff;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.course-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.course-distance {
+    font-size: 12px;
+    color: #0066ff;
+    font-weight: 600;
+    background: rgba(0, 102, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.course-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.course-status {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.status-excellent { background: #d4edda; color: #155724; }
+.status-good { background: #cce5ff; color: #004085; }
+.status-normal { background: #fff3cd; color: #856404; }
+.status-poor { background: #f8d7da; color: #721c24; }
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0066ff;
+    display: block;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    padding-top: 70px;
+}
+
+.section {
+    padding: 80px 0;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* 카드 레이아웃 */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 후기 섹션 - Finda 스타일 */
+.testimonials-section {
+    background: #f8fbff;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.testimonial-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.testimonial-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+.user-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.user-info .rating {
+    color: #ffa500;
+    font-size: 14px;
+}
+
+.testimonial-content {
+    color: #666;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* 통계 섹션 */
+.stats-section {
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    color: white;
+    text-align: center;
+}
+
+.stats-section .section-title,
+.stats-section .section-subtitle {
+    color: white;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-card .number {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.stat-card .label {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* 모바일 메뉴 */
+.mobile-menu-btn {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    padding: 8px;
+    border: none;
+    background: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 12px 12px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+    
+    .nav.mobile-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .nav ul {
+        flex-direction: column;
+        gap: 0;
+        padding: 20px;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-content .subtitle {
+        font-size: 18px;
+    }
+
+    .app-download-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .feature-grid,
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+}
+
+/* 탭 네비게이션 */
+.tab-navigation {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: #0066ff;
+    color: white;
+    border-color: #0066ff;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-select, .filter-date {
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    min-width: 120px;
+}
+
+/* 후기 폼 */
+.review-form {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0066ff;
+}
+
+.rating-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.rating-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.rating-item:hover {
+    background: #f8fbff;
+}
+
+.rating-item input[type="radio"] {
+    width: auto;
+}
+
+.point-notice {
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+}
+
+/* 후기 목록 */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-item {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.review-item:hover {
+    transform: translateY(-2px);
+}
+
+.review-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.review-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.review-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.review-content {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 검색 섹션 */
+.search-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.search-tab-btn {
+    padding: 12px 24px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-tab-btn.active {
+    background: #0066ff;
+    color: white;
+    border-color: #0066ff;
+}
+
+.search-tab-content {
+    display: none;
+    margin-bottom: 30px;
+}
+
+.search-tab-content.active {
+    display: block;
+}
+
+.region-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.region-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.region-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.region-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.region-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.region-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.date-search-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.search-result-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.search-result-card:hover {
+    transform: translateY(-2px);
+}
+
+.search-result-card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.result-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.result-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0066ff;
+    margin-bottom: 16px;
+}
+
+/* 포인트 섹션 */
+.points-overview {
+    margin-bottom: 40px;
+}
+
+.points-card {
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    color: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.points-header h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.points-amount {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.points-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.points-actions .cta-button {
+    background: white;
+    color: #0066ff;
+}
+
+.points-actions .btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.earning-rules {
+    margin-bottom: 40px;
+}
+
+.earning-rules h3 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.rule-item {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.rule-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.rule-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.rule-info p {
+    color: #0066ff;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.reward-shop h3 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.reward-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.reward-item {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.reward-image {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.reward-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.reward-price {
+    color: #0066ff;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+
+/* 예약 섹션 */
+.booking-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.channel-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.channel-header {
+    margin-bottom: 20px;
+}
+
+.channel-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.channel-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.channel-card p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.channel-card ul {
+    text-align: left;
+    margin-bottom: 24px;
+    padding-left: 20px;
+}
+
+.channel-card li {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+/* 마이페이지 섹션 */
+.profile-overview {
+    margin-bottom: 40px;
+}
+
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0066ff, #0052d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+}
+
+.profile-info h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.profile-info p {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.menu-item {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.menu-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.menu-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.menu-item p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 마이페이지 컨텐츠 스타일 */
+.my-reviews-list, .booking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.my-review-item, .booking-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-review-item h4, .booking-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.point-summary {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.point-summary p {
+    margin-bottom: 12px;
+}
+
+.settings-list {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.setting-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.status {
+    background: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* 후기 액션 버튼 */
+.review-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.review-actions .btn-secondary {
+    font-size: 12px;
+    padding: 8px 12px;
+}
+
+/* 위치 기반 후기 작성 UI */
+.location-write-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.location-recommendation {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+}
+
+.location-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.location-header h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.detect-location-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+}
+
+.detect-location-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+}
+
+.location-pulse {
+    animation: locationPulse 1.5s infinite;
+}
+
+@keyframes locationPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.recommended-courses {
+    margin-top: 30px;
+}
+
+.recommended-courses h4 {
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 16px;
+}
+
+.courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.course-option {
+    background: #f8fbff;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.course-option:hover {
+    background: white;
+    border-color: #0066ff;
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.1);
+}
+
+.course-option.selected {
+    background: white;
+    border-color: #0066ff;
+    box-shadow: 0 4px 16px rgba(0, 102, 255, 0.2);
+}
+
+.manual-search {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.search-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.toggle-search-btn {
+    background: none;
+    border: none;
+    color: #0066ff;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.manual-search-form input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.selected-course-info {
+    margin-bottom: 20px;
+}
+
+.selected-course-card {
+    background: linear-gradient(135deg, #f8fbff, #e8f5ff);
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #0066ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.course-info h4 {
+    margin-bottom: 8px;
+    color: #0066ff;
+    font-size: 18px;
+}
+
+.course-info p {
+    margin-bottom: 4px;
+    color: #666;
+    font-size: 14px;
+}
+
+.change-course-btn {
+    background: white;
+    border: 1px solid #0066ff;
+    color: #0066ff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.change-course-btn:hover {
+    background: #0066ff;
+    color: white;
+}
+
+/* 실시간 상태 작성 폼 */
+.location-review-form {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-section h3 {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+}
+
+.quick-status-selection {
+    margin-bottom: 30px;
+}
+
+.quick-status-selection h4 {
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 16px;
+}
+
+.status-chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.status-chip {
+    padding: 16px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    text-align: center;
+    font-size: 14px;
+}
+
+.status-chip:hover {
+    border-color: #0066ff;
+    background: #f8fbff;
+}
+
+.status-chip.selected {
+    border-color: #0066ff;
+    background: #0066ff;
+    color: white;
+}
+
+.detail-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.photo-upload-area {
+    border: 2px dashed #0066ff;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f8fbff;
+}
+
+.photo-upload-area:hover {
+    background: #e8f5ff;
+    border-color: #0052d9;
+}
+
+.upload-placeholder {
+    color: #0066ff;
+}
+
+.upload-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.upload-placeholder p {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.upload-placeholder small {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.realtime-notice {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.notice-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.notice-icon {
+    font-size: 24px;
+    animation: flash 2s infinite;
+}
+
+@keyframes flash {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.5; }
+}
+
+.notice-content strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.notice-content p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.point-reward {
+    text-align: center;
+}
+
+.reward-amount {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.realtime-submit {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    position: relative;
+    overflow: hidden;
+}
+
+.realtime-submit:hover {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.realtime-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 숨김 처리 */
+.hidden {
+    display: none;
+}
+
+/* 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* 반응형 개선 */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .rating-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-input-group,
+    .date-search-form {
+        flex-direction: column;
+    }
+    
+    .points-actions {
+        flex-direction: column;
+    }
+    
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+} 

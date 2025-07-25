@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 & 부킹 - GolfLoop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">⛳ GolfLoop</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">홈</a></li>
+                    <li><a href="golf-reviews.html" class="nav-link">골프장 후기</a></li>
+                    <li><a href="golf-search.html" class="nav-link">골프장 찾기</a></li>
+                    <li><a href="points-rewards.html" class="nav-link">포인트 & 리워드</a></li>
+                    <li><a href="booking.html" class="nav-link active">예약 & 부킹</a></li>
+                    <li><a href="mypage.html" class="nav-link">마이페이지</a></li>
+                </ul>
+            </nav>
+            <a href="#download" class="cta-button">앱 다운로드</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 헤더 -->
+        <section class="page-header">
+            <div class="container">
+                <h1>예약 & 부킹</h1>
+                <p>간편하게 골프장을 예약하고 특별한 혜택을 받아보세요</p>
+            </div>
+        </section>
+
+        <!-- 예약 채널 -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎯 예약 채널</h2>
+                <p class="section-subtitle">다양한 예약 채널을 통해 최적의 조건으로 예약하세요</p>
+                
+                <div class="booking-channels">
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">🏌️</div>
+                            <h3>골팡</h3>
+                            <span class="channel-badge">인기</span>
+                        </div>
+                        <div class="channel-info">
+                            <p class="channel-desc">전국 골프장 통합 예약 플랫폼</p>
+                            <ul class="channel-features">
+                                <li>• 최저가 보장</li>
+                                <li>• 다양한 할인 혜택</li>
+                                <li>• 즉시 예약 확정</li>
+                                <li>• 포인트 적립</li>
+                            </ul>
+                            <div class="channel-stats">
+                                <span class="stat-item">📍 500+ 골프장</span>
+                                <span class="stat-item">⭐ 4.8/5</span>
+                            </div>
+                        </div>
+                        <div class="channel-actions">
+                            <button class="cta-button" onclick="openBookingChannel('golfang')">골팡에서 예약</button>
+                            <button class="btn-secondary" onclick="openBookingInfo('golfang')">자세히 보기</button>
+                        </div>
+                    </div>
+
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">💬</div>
+                            <h3>카카오골프</h3>
+                            <span class="channel-badge">편리</span>
+                        </div>
+                        <div class="channel-info">
+                            <p class="channel-desc">카카오톡으로 간편 예약</p>
+                            <ul class="channel-features">
+                                <li>• 카카오톡 간편 예약</li>
+                                <li>• 카카오페이 결제</li>
+                                <li>• 친구와 함께 예약</li>
+                                <li>• 알림톡 예약 확인</li>
+                            </ul>
+                            <div class="channel-stats">
+                                <span class="stat-item">📍 300+ 골프장</span>
+                                <span class="stat-item">⭐ 4.6/5</span>
+                            </div>
+                        </div>
+                        <div class="channel-actions">
+                            <button class="cta-button" onclick="openBookingChannel('kakao')">카카오골프 예약</button>
+                            <button class="btn-secondary" onclick="openBookingInfo('kakao')">자세히 보기</button>
+                        </div>
+                    </div>
+
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-icon">👑</div>
+                            <h3>회원제 골프장</h3>
+                            <span class="channel-badge">프리미엄</span>
+                        </div>
+                        <div class="channel-info">
+                            <p class="channel-desc">프리미엄 회원제 골프장 직접 예약</p>
+                            <ul class="channel-features">
+                                <li>• 고급 골프장 접근</li>
+                                <li>• 회원 특가 혜택</li>
+                                <li>• 개인 맞춤 서비스</li>
+                                <li>• 프리미엄 시설</li>
+                            </ul>
+                            <div class="channel-stats">
+                                <span class="stat-item">📍 50+ 골프장</span>
+                                <span class="stat-item">⭐ 4.9/5</span>
+                            </div>
+                        </div>
+                        <div class="channel-actions">
+                            <button class="cta-button" onclick="openBookingChannel('private')">회원제 골프장</button>
+                            <button class="btn-secondary" onclick="openBookingInfo('private')">자세히 보기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 추천 예약 -->
+        <section class="section" style="background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">🌟 오늘의 추천 예약</h2>
+                <div class="recommended-bookings">
+                    <div class="booking-item">
+                        <div class="booking-image">🏌️‍♂️</div>
+                        <div class="booking-info">
+                            <h4>스카이힐 컨트리클럽</h4>
+                            <p class="booking-location">📍 경기도 성남시</p>
+                            <p class="booking-date">📅 내일 (7/25) 오전 8시</p>
+                            <p class="booking-price">💰 평일 특가 95,000원 <span class="original-price">120,000원</span></p>
+                            <div class="booking-tags">
+                                <span class="tag discount">20% 할인</span>
+                                <span class="tag available">예약 가능</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="cta-button">지금 예약</button>
+                            <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                        </div>
+                    </div>
+
+                    <div class="booking-item">
+                        <div class="booking-image">⛳</div>
+                        <div class="booking-info">
+                            <h4>베어크릭 골프클럽</h4>
+                            <p class="booking-location">📍 경기도 파주시</p>
+                            <p class="booking-date">📅 이번 주말 (7/27) 오후 2시</p>
+                            <p class="booking-price">💰 주말 특가 130,000원 <span class="original-price">160,000원</span></p>
+                            <div class="booking-tags">
+                                <span class="tag discount">18% 할인</span>
+                                <span class="tag limited">마감 임박</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="cta-button">지금 예약</button>
+                            <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                        </div>
+                    </div>
+
+                    <div class="booking-item">
+                        <div class="booking-image">🌲</div>
+                        <div class="booking-info">
+                            <h4>오크밸리 컨트리클럽</h4>
+                            <p class="booking-location">📍 강원도 원주시</p>
+                            <p class="booking-date">📅 다음 주 (8/1) 오전 10시</p>
+                            <p class="booking-price">💰 얼리버드 110,000원 <span class="original-price">140,000원</span></p>
+                            <div class="booking-tags">
+                                <span class="tag discount">21% 할인</span>
+                                <span class="tag new">신규 오픈</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="cta-button">지금 예약</button>
+                            <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 예약 혜택 -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎁 GolfLoop 예약 혜택</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">💰</div>
+                        <h4>최저가 보장</h4>
+                        <p>다른 곳보다 비싸면 차액을 돌려드립니다</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎯</div>
+                        <h4>포인트 적립</h4>
+                        <p>예약 완료 시 100P 적립</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📱</div>
+                        <h4>간편 예약</h4>
+                        <p>클릭 몇 번으로 예약 완료</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🔔</div>
+                        <h4>알림 서비스</h4>
+                        <p>예약 확인부터 라운드까지 알림</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🆘</div>
+                        <h4>24시간 지원</h4>
+                        <p>언제든지 도움을 받을 수 있습니다</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🎉</div>
+                        <h4>특별 혜택</h4>
+                        <p>회원 전용 할인과 이벤트</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 예약 가이드 -->
+        <section class="section" style="background: #f8fbff;">
+            <div class="container">
+                <h2 class="section-title">📋 예약 가이드</h2>
+                <div class="guide-steps">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>골프장 선택</h4>
+                            <p>원하는 날짜와 지역에서 골프장을 찾아보세요</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>예약 채널 선택</h4>
+                            <p>골팡, 카카오골프, 회원제 중 선택하세요</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>예약 정보 입력</h4>
+                            <p>날짜, 시간, 인원수를 확인하고 예약하세요</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>예약 완료</h4>
+                            <p>예약 확인 메시지를 받고 포인트를 적립받으세요</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="guide-tips">
+                    <h3>💡 예약 팁</h3>
+                    <ul>
+                        <li>• <strong>평일 라운드</strong>가 주말보다 20-30% 저렴합니다</li>
+                        <li>• <strong>오후 스타트</strong> 시간대가 오전보다 할인 혜택이 많습니다</li>
+                        <li>• <strong>미리 예약</strong>할수록 더 좋은 조건으로 예약 가능합니다</li>
+                        <li>• <strong>날씨 확인</strong>을 통해 최적의 라운드 날짜를 선택하세요</li>
+                        <li>• <strong>후기 확인</strong>으로 골프장 컨디션을 미리 파악하세요</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 토스트 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // 예약 채널 정보 표시
+        function openBookingInfo(channel) {
+            const channelInfo = {
+                'golfang': '골팡은 전국 최대 골프장 네트워크를 보유한 예약 플랫폼입니다.',
+                'kakao': '카카오골프는 카카오톡을 통한 간편한 예약 서비스입니다.',
+                'private': '회원제 골프장은 프리미엄 서비스를 제공하는 고급 골프장입니다.'
+            };
+            
+            alert(channelInfo[channel] || '예약 채널 정보를 준비 중입니다.');
+        }
+    </script>
+</body>
+</html> 

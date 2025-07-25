@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>골프장 찾기 - GolfLoop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">⛳ GolfLoop</a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">홈</a></li>
+                    <li><a href="golf-reviews.html" class="nav-link">골프장 후기</a></li>
+                    <li><a href="golf-search.html" class="nav-link active">골프장 찾기</a></li>
+                    <li><a href="points-rewards.html" class="nav-link">포인트 & 리워드</a></li>
+                    <li><a href="booking.html" class="nav-link">예약 & 부킹</a></li>
+                    <li><a href="mypage.html" class="nav-link">마이페이지</a></li>
+                </ul>
+            </nav>
+            <a href="#download" class="cta-button">앱 다운로드</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 헤더 -->
+        <section class="page-header">
+            <div class="container">
+                <h1>골프장 찾기</h1>
+                <p>원하는 조건으로 골프장을 찾아보세요</p>
+            </div>
+        </section>
+
+        <!-- 골프장 검색 섹션 -->
+        <section class="section">
+            <div class="container">
+                <!-- 빠른 위치 찾기 -->
+                <div class="quick-location-section">
+                    <button class="quick-location-btn" onclick="requestLocation()">
+                        <span class="location-icon">📍</span>
+                        <div>
+                            <div class="btn-title">내 주변 골프장 찾기</div>
+                            <div class="btn-subtitle">현재 위치 기준으로 가까운 골프장</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- 검색 방법 선택 -->
+                <div class="search-form">
+                    <div class="search-tabs">
+                        <button class="search-tab-btn active" onclick="showSearchTab('region')">지역별 찾기</button>
+                        <button class="search-tab-btn" onclick="showSearchTab('name')">골프장명으로</button>
+                        <button class="search-tab-btn" onclick="showSearchTab('date')">날짜별 예약</button>
+                    </div>
+
+                    <!-- 지역별 검색 -->
+                    <div id="region-search" class="search-tab-content active">
+                        <h3>🗺️ 지역을 선택하세요</h3>
+                        <div class="region-grid">
+                            <div class="region-card" onclick="searchByRegion('서울')">
+                                <div class="region-icon">🏙️</div>
+                                <div class="region-name">서울</div>
+                                <div class="region-count">15개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('경기')">
+                                <div class="region-icon">🌆</div>
+                                <div class="region-name">경기</div>
+                                <div class="region-count">42개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('인천')">
+                                <div class="region-icon">🌊</div>
+                                <div class="region-name">인천</div>
+                                <div class="region-count">8개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('강원')">
+                                <div class="region-icon">⛰️</div>
+                                <div class="region-name">강원</div>
+                                <div class="region-count">28개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('충청')">
+                                <div class="region-icon">🌾</div>
+                                <div class="region-name">충청</div>
+                                <div class="region-count">21개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('전라')">
+                                <div class="region-icon">🌺</div>
+                                <div class="region-name">전라</div>
+                                <div class="region-count">19개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('경상')">
+                                <div class="region-icon">🏔️</div>
+                                <div class="region-name">경상</div>
+                                <div class="region-count">35개 골프장</div>
+                            </div>
+                            <div class="region-card" onclick="searchByRegion('제주')">
+                                <div class="region-icon">🌴</div>
+                                <div class="region-name">제주</div>
+                                <div class="region-count">12개 골프장</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 골프장명 검색 -->
+                    <div id="name-search" class="search-tab-content">
+                        <h3>🔍 골프장명을 입력하세요</h3>
+                        <div class="search-input-group">
+                            <input type="text" class="search-input" placeholder="골프장명을 입력하세요" 
+                                   oninput="searchByName(this.value)" id="golf-course-search">
+                            <button class="search-btn" onclick="searchByName(document.getElementById('golf-course-search').value)">
+                                검색
+                            </button>
+                        </div>
+                        <div class="search-suggestions">
+                            <span class="suggestion-label">인기 검색어:</span>
+                            <button class="suggestion-chip" onclick="searchByName('스카이힐')">스카이힐</button>
+                            <button class="suggestion-chip" onclick="searchByName('베어크릭')">베어크릭</button>
+                            <button class="suggestion-chip" onclick="searchByName('오크밸리')">오크밸리</button>
+                            <button class="suggestion-chip" onclick="searchByName('라데나')">라데나</button>
+                        </div>
+                    </div>
+
+                    <!-- 날짜별 검색 -->
+                    <div id="date-search" class="search-tab-content">
+                        <h3>📅 예약 가능한 날짜를 선택하세요</h3>
+                        <div class="date-search-form">
+                            <div class="date-input-group">
+                                <div class="form-group">
+                                    <label>날짜</label>
+                                    <input type="date" id="search-date" class="search-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>시간</label>
+                                    <select id="search-time" class="search-input">
+                                        <option value="">시간 선택</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>인원</label>
+                                    <select id="search-people" class="search-input">
+                                        <option value="">인원 선택</option>
+                                        <option value="1">1명</option>
+                                        <option value="2">2명</option>
+                                        <option value="3">3명</option>
+                                        <option value="4">4명</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="search-btn" onclick="searchByDate()">예약 가능한 골프장 찾기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 검색 결과 -->
+                <div class="search-results" id="search-results" style="display: none;">
+                    <div class="results-header">
+                        <h3 id="results-title">검색 결과</h3>
+                        <div class="results-sort">
+                            <select onchange="sortResults(this.value)">
+                                <option value="distance">거리순</option>
+                                <option value="price">가격순</option>
+                                <option value="rating">평점순</option>
+                                <option value="name">이름순</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-results-grid" id="search-results-list">
+                        <!-- 동적으로 생성될 검색 결과 -->
+                    </div>
+                </div>
+
+                <!-- 추천 골프장 -->
+                <div class="recommended-section">
+                    <h3>🌟 추천 골프장</h3>
+                    <div class="recommended-grid">
+                        <div class="golf-course-card">
+                            <div class="course-image">🏌️‍♂️</div>
+                            <div class="course-info">
+                                <h4>스카이힐 컨트리클럽</h4>
+                                <p class="course-location">📍 경기도 성남시</p>
+                                <p class="course-rating">⭐ 4.8 (126 리뷰)</p>
+                                <p class="course-price">💰 평일 120,000원</p>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                                <button class="cta-button" onclick="location.href='booking.html'">예약하기</button>
+                            </div>
+                        </div>
+
+                        <div class="golf-course-card">
+                            <div class="course-image">⛳</div>
+                            <div class="course-info">
+                                <h4>베어크릭 골프클럽</h4>
+                                <p class="course-location">📍 경기도 파주시</p>
+                                <p class="course-rating">⭐ 4.6 (89 리뷰)</p>
+                                <p class="course-price">💰 평일 95,000원</p>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                                <button class="cta-button" onclick="location.href='booking.html'">예약하기</button>
+                            </div>
+                        </div>
+
+                        <div class="golf-course-card">
+                            <div class="course-image">🌲</div>
+                            <div class="course-info">
+                                <h4>오크밸리 컨트리클럽</h4>
+                                <p class="course-location">📍 강원도 원주시</p>
+                                <p class="course-rating">⭐ 4.9 (203 리뷰)</p>
+                                <p class="course-price">💰 평일 140,000원</p>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-secondary" onclick="location.href='golf-reviews.html'">후기 보기</button>
+                                <button class="cta-button" onclick="location.href='booking.html'">예약하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 토스트 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- 카카오 지도 SDK -->
+    <script type="text/javascript" 
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=25171caa731cc576b1f8345acdebfcb9&libraries=services,clusterer">
+    </script>
+    
+    <!-- GolfLoop API 서비스들 -->
+    <script src="config/api-config.js"></script>
+    <script src="services/location-service.js"></script>
+    <script src="services/map-service.js"></script>
+    <script src="services/review-location-service.js"></script>
+    
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // 검색 탭 전환
+        function showSearchTab(tabName) {
+            document.querySelectorAll('.search-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.search-tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-search').classList.add('active');
+        }
+
+        // 검색 결과 정렬
+        function sortResults(sortType) {
+            // 정렬 로직 구현
+            showToast(`${sortType}으로 정렬되었습니다.`);
+        }
+    </script>
+</body>
+</html> 
