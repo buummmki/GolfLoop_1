@@ -726,12 +726,101 @@ function getRatingValue(rating) {
 
 // ============= 위치 기반 기능들 =============
 
+// 브라우저 감지 및 웨일 브라우저 특별 안내
+function detectBrowser() {
+    const userAgent = navigator.userAgent;
+    let browser = 'unknown';
+    
+    if (userAgent.includes('Whale')) {
+        browser = 'whale';
+    } else if (userAgent.includes('Chrome')) {
+        browser = 'chrome';
+    } else if (userAgent.includes('Firefox')) {
+        browser = 'firefox';
+    } else if (userAgent.includes('Safari')) {
+        browser = 'safari';
+    } else if (userAgent.includes('Edge')) {
+        browser = 'edge';
+    }
+    
+    return browser;
+}
+
+// 웨일 브라우저 특별 안내
+function showWhaleBrowserHelp() {
+    const whaleHelpMessage = `
+        🐋 웨일 브라우저 위치 권한 설정:
+        
+        방법 1 (권장):
+        1. 주소창 왼쪽 자물쇠 아이콘 클릭
+        2. "위치" 항목에서 "허용" 선택
+        3. 페이지 새로고침 후 다시 시도
+        
+        방법 2:
+        1. 웨일 설정 (⚙️) 클릭
+        2. 개인정보 보호 및 보안
+        3. "위치 정보" 항목 찾기
+        4. "사이트에서 위치 정보 요청 시" 선택
+        5. "허용"으로 설정
+        
+        방법 3:
+        1. 주소창에 whale://settings/content/location 입력
+        2. 위치 정보 설정 페이지에서 허용으로 변경
+        
+        팁: 웨일 브라우저는 Chrome 기반이므로 Chrome과 유사한 설정 방법을 사용합니다.
+    `;
+    
+    alert(whaleHelpMessage);
+}
+
+// 위치 권한 도움말 표시 (브라우저별 맞춤 안내)
+function showLocationPermissionHelp() {
+    const browser = detectBrowser();
+    
+    if (browser === 'whale') {
+        showWhaleBrowserHelp();
+        return;
+    }
+    
+    const helpMessage = `
+        📍 위치 권한 설정 방법:
+        
+        Chrome/Edge/웨일:
+        1. 주소창 왼쪽 자물쇠 아이콘 클릭
+        2. "위치" 권한을 "허용"으로 변경
+        
+        웨일 브라우저 추가 설정:
+        1. 웨일 설정 > 개인정보 보호 및 보안
+        2. "위치 정보" 항목에서 "사이트에서 위치 정보 요청 시" 선택
+        3. 또는 주소창 왼쪽 자물쇠 아이콘 > 위치 > 허용
+        
+        Firefox:
+        1. 주소창 왼쪽 자물쇠 아이콘 클릭
+        2. "위치 액세스"를 "허용"으로 변경
+        
+        Safari:
+        1. Safari > 환경설정 > 개인정보 보호
+        2. 위치 서비스에서 이 사이트 허용
+        
+        모바일 브라우저:
+        1. 브라우저 설정 > 사이트 권한
+        2. 위치 정보 > 허용으로 설정
+    `;
+    
+    console.log(helpMessage);
+    
+    // 사용자에게 도움말 표시
+    if (confirm('위치 권한 설정 도움말을 확인하시겠습니까?')) {
+        alert(helpMessage);
+    }
+}
+
 // 위치 기반 골프장 찾기 (2024년 완전한 데이터베이스 사용)
 async function requestLocation() {
     showToast('내 주변 골프장을 찾는 중...');
     
     if (!navigator.geolocation) {
-        alert('이 브라우저는 위치 서비스를 지원하지 않습니다.');
+        showToast('⚠️ 이 브라우저는 위치 서비스를 지원하지 않습니다.');
         return;
     }
     
@@ -742,16 +831,36 @@ async function requestLocation() {
     }
     
     try {
+        // 먼저 권한 상태 확인
+        if (navigator.permissions) {
+            const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+            
+            if (permissionStatus.state === 'denied') {
+                showToast('⚠️ 위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.');
+                if (locationStatus) {
+                    locationStatus.style.display = 'none';
+                }
+                return;
+            }
+            
+            if (permissionStatus.state === 'prompt') {
+                showToast('📍 위치 권한을 허용해주세요.');
+            }
+        }
+        
+        // 위치 정보 요청 (더 긴 타임아웃과 더 정확한 옵션)
         const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 300000
+                timeout: 15000, // 15초로 증가
+                maximumAge: 60000 // 1분으로 감소 (더 최신 위치)
             });
         });
         
         const { latitude, longitude } = position.coords;
         currentUser.currentLocation = { lat: latitude, lng: longitude };
+        
+        console.log(`📍 Location acquired: ${latitude}, ${longitude}`);
         
         // 위치 정보 업데이트
         updateLocationStatus(latitude, longitude);
@@ -775,18 +884,19 @@ async function requestLocation() {
         }
         
     } catch (error) {
-        console.error('위치 오류:', error);
+        console.error('Location error:', error);
         let errorMessage = '위치를 확인할 수 없습니다.';
         
         switch(error.code) {
             case error.PERMISSION_DENIED:
-                errorMessage = '위치 권한이 필요합니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+                errorMessage = '위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+                showLocationPermissionHelp();
                 break;
             case error.POSITION_UNAVAILABLE:
-                errorMessage = '현재 위치를 확인할 수 없습니다.';
+                errorMessage = '현재 위치를 확인할 수 없습니다. GPS 신호를 확인해주세요.';
                 break;
             case error.TIMEOUT:
-                errorMessage = '위치 확인에 시간이 오래 걸리고 있습니다.';
+                errorMessage = '위치 확인에 시간이 오래 걸리고 있습니다. 다시 시도해주세요.';
                 break;
         }
         
@@ -941,7 +1051,7 @@ function showQuickWrite() {
 // 위치 기반 골프장 감지 (후기 작성에서) - 2024년 데이터베이스 사용
 async function detectCurrentLocation() {
     if (!navigator.geolocation) {
-        alert('이 브라우저는 위치 서비스를 지원하지 않습니다.');
+        showToast('⚠️ 이 브라우저는 위치 서비스를 지원하지 않습니다.');
         return;
     }
     
@@ -951,16 +1061,35 @@ async function detectCurrentLocation() {
     btn.disabled = true;
     
     try {
+        // 먼저 권한 상태 확인
+        if (navigator.permissions) {
+            const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+            
+            if (permissionStatus.state === 'denied') {
+                showToast('⚠️ 위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                showLocationPermissionHelp();
+                return;
+            }
+            
+            if (permissionStatus.state === 'prompt') {
+                showToast('📍 위치 권한을 허용해주세요.');
+            }
+        }
+        
         const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 300000
+                timeout: 15000, // 15초로 증가
+                maximumAge: 60000 // 1분으로 감소
             });
         });
         
         const { latitude, longitude } = position.coords;
         currentUser.currentLocation = { lat: latitude, lng: longitude };
+        
+        console.log(`📍 Location acquired for review: ${latitude}, ${longitude}`);
         
         // 2024년 완전한 데이터베이스에서 주변 골프장 검색
         if (window.GolfCoursesService2024) {
@@ -976,7 +1105,7 @@ async function detectCurrentLocation() {
             btn.innerHTML = originalText;
             btn.disabled = false;
             
-            showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+            showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 추천합니다!`);
         } else {
             // 서비스가 없으면 기본 더미 데이터 사용
             showRecommendedCourses();
@@ -988,8 +1117,23 @@ async function detectCurrentLocation() {
         }
         
     } catch (error) {
-        console.error('위치 오류:', error);
-        showToast('⚠️ 위치를 확인할 수 없습니다. 위치 권한을 허용해주세요.');
+        console.error('Location detection error:', error);
+        let errorMessage = '위치를 확인할 수 없습니다.';
+        
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                errorMessage = '위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+                showLocationPermissionHelp();
+                break;
+            case error.POSITION_UNAVAILABLE:
+                errorMessage = '현재 위치를 확인할 수 없습니다. GPS 신호를 확인해주세요.';
+                break;
+            case error.TIMEOUT:
+                errorMessage = '위치 확인에 시간이 오래 걸리고 있습니다. 다시 시도해주세요.';
+                break;
+        }
+        
+        showToast(`⚠️ ${errorMessage}`);
         btn.innerHTML = originalText;
         btn.disabled = false;
     }
@@ -1079,24 +1223,161 @@ function toggleManualSearch() {
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
-// 골프장 수동 검색
+// 골프장 검색 (후기 작성용) - 2024년 완전한 데이터베이스 사용
 function searchGolfCourses(query) {
     if (!query || query.length < 2) {
         document.getElementById('manual-search-results').innerHTML = '';
         return;
     }
     
-    const results = nearbyGolfCourses.filter(course => 
-        course.name.toLowerCase().includes(query.toLowerCase()) ||
-        course.address.toLowerCase().includes(query.toLowerCase())
-    );
+    console.log(`🔍 Searching golf courses for: "${query}"`);
     
-    document.getElementById('manual-search-results').innerHTML = results.map(course => `
-        <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
-            <div class="course-name">${course.name}</div>
-            <div class="course-meta">📍 ${course.address}</div>
-        </div>
-    `).join('');
+    let results = [];
+    
+    // 2024년 완전한 데이터베이스에서 검색
+    if (window.GolfCoursesService2024) {
+        // 이름으로 검색
+        const nameResults = window.GolfCoursesService2024.searchGolfCourseByName(query);
+        
+        // 주소로 검색 (지역명 포함)
+        const addressResults = window.GolfCoursesService2024.getAllGolfCourses().filter(course => 
+            course.address && course.address.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        // 지역명으로 검색
+        const regionResults = window.GolfCoursesService2024.getAllGolfCourses().filter(course => 
+            course.region && course.region.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        // 결과 합치기 및 중복 제거
+        results = [...nameResults, ...addressResults, ...regionResults];
+        results = results.filter((course, index, self) => 
+            index === self.findIndex(c => c.id === course.id)
+        );
+        
+        console.log(`✅ Found ${results.length} golf courses in 2024 database`);
+    } else {
+        // 2024년 데이터베이스가 없으면 기존 더미 데이터 사용
+        results = nearbyGolfCourses.filter(course => 
+            course.name.toLowerCase().includes(query.toLowerCase()) ||
+            course.address.toLowerCase().includes(query.toLowerCase())
+        );
+        console.log(`⚠️ Using fallback data: Found ${results.length} golf courses`);
+    }
+    
+    // 검색 결과 표시
+    const searchResults = document.getElementById('manual-search-results');
+    if (searchResults) {
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <p>😔 "${query}"에 대한 검색 결과가 없습니다.</p>
+                    <p>다른 키워드로 검색해보세요.</p>
+                </div>
+            `;
+        } else {
+            searchResults.innerHTML = results.slice(0, 10).map(course => {
+                // 2024년 데이터베이스 형식과 기존 형식 모두 지원
+                const courseName = course.name || course.golfCourse;
+                const courseAddress = course.address || '주소 정보 없음';
+                const courseRegion = course.region || '';
+                const courseHoles = course.holes ? `${course.holes}홀` : '';
+                const courseType = course.type || '';
+                
+                return `
+                    <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
+                        <div class="course-header">
+                            <div class="course-name">${courseName}</div>
+                            <div class="course-meta">
+                                ${courseHoles} ${courseType}
+                            </div>
+                        </div>
+                        <div class="course-location">📍 ${courseAddress}</div>
+                        ${courseRegion ? `<div class="course-region">🏘️ ${courseRegion}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+}
+
+// 지역별 골프장 검색 (후기 작성용)
+function searchGolfCoursesByRegion(region) {
+    console.log(`🏘️ Searching golf courses in region: "${region}"`);
+    
+    // 지역 버튼 활성화 상태 관리
+    document.querySelectorAll('.region-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === region) {
+            btn.classList.add('active');
+        }
+    });
+    
+    let results = [];
+    
+    // 2024년 완전한 데이터베이스에서 지역별 검색
+    if (window.GolfCoursesService2024) {
+        results = window.GolfCoursesService2024.searchGolfCoursesByRegion(region);
+        console.log(`✅ Found ${results.length} golf courses in ${region}`);
+    } else {
+        // 2024년 데이터베이스가 없으면 기존 더미 데이터 사용
+        results = nearbyGolfCourses.filter(course => 
+            course.address.includes(region)
+        );
+        console.log(`⚠️ Using fallback data: Found ${results.length} golf courses in ${region}`);
+    }
+    
+    // 검색 결과 표시
+    const searchResults = document.getElementById('manual-search-results');
+    if (searchResults) {
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <p>😔 ${region} 지역의 골프장이 없습니다.</p>
+                    <p>다른 지역을 선택해보세요.</p>
+                </div>
+            `;
+        } else {
+            searchResults.innerHTML = results.map(course => {
+                const courseName = course.name || course.golfCourse;
+                const courseAddress = course.address || '주소 정보 없음';
+                const courseHoles = course.holes ? `${course.holes}홀` : '';
+                const courseType = course.type || '';
+                
+                return `
+                    <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
+                        <div class="course-header">
+                            <div class="course-name">${courseName}</div>
+                            <div class="course-meta">
+                                ${courseHoles} ${courseType}
+                            </div>
+                        </div>
+                        <div class="course-location">📍 ${courseAddress}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+}
+
+// 수동 검색 토글 시 검색 결과 초기화
+function toggleManualSearch() {
+    const form = document.getElementById('manual-search-form');
+    const searchInput = document.getElementById('manual-golf-search');
+    const searchResults = document.getElementById('manual-search-results');
+    
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        // 검색 결과 초기화
+        if (searchResults) searchResults.innerHTML = '';
+        if (searchInput) searchInput.value = '';
+        // 지역 버튼 활성화 상태 초기화
+        document.querySelectorAll('.region-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    } else {
+        form.style.display = 'none';
+    }
 }
 
 // 빠른 상태 선택
@@ -1265,6 +1546,90 @@ function getWeatherText(weather) {
     };
     return weatherMap[weather] || '알 수 없음';
 }
+
+// 위치 권한 상태 확인 및 표시
+async function checkLocationPermission() {
+    if (!navigator.permissions) return;
+    
+    try {
+        const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+        const locationBtn = document.getElementById('location-request-btn');
+        const browser = detectBrowser();
+        
+        if (locationBtn) {
+            // 브라우저별 클래스 추가
+            locationBtn.classList.remove('chrome-browser', 'whale-browser', 'firefox-browser', 'safari-browser', 'edge-browser');
+            locationBtn.classList.add(`${browser}-browser`);
+            
+            switch(permissionStatus.state) {
+                case 'granted':
+                    locationBtn.classList.add('permission-granted');
+                    locationBtn.querySelector('.btn-subtitle').textContent = '위치 권한 허용됨 - 클릭하여 검색';
+                    break;
+                case 'denied':
+                    locationBtn.classList.add('permission-denied');
+                    if (browser === 'whale') {
+                        locationBtn.querySelector('.btn-subtitle').textContent = '웨일 브라우저 - 위치 권한 설정 필요';
+                    } else {
+                        locationBtn.querySelector('.btn-subtitle').textContent = '위치 권한 거부됨 - 설정에서 허용 필요';
+                    }
+                    break;
+                case 'prompt':
+                    locationBtn.classList.add('permission-prompt');
+                    if (browser === 'whale') {
+                        locationBtn.querySelector('.btn-subtitle').textContent = '웨일 브라우저 - 위치 권한 허용 후 검색';
+                    } else {
+                        locationBtn.querySelector('.btn-subtitle').textContent = '위치 권한 허용 후 근처 골프장 정보 보기';
+                    }
+                    break;
+            }
+        }
+        
+        // 권한 상태 변경 감지
+        permissionStatus.addEventListener('change', () => {
+            checkLocationPermission();
+        });
+        
+    } catch (error) {
+        console.log('Permission check not supported');
+    }
+}
+
+// 골프장 통계 정보 표시
+function displayGolfStats() {
+    const statsElement = document.getElementById('total-courses-count');
+    if (!statsElement) return;
+    
+    if (window.GolfCoursesService2024) {
+        const stats = window.GolfCoursesService2024.getGolfCourseStats();
+        const totalCourses = stats.totalCourses;
+        const publicCourses = stats.publicCourses;
+        const membershipCourses = stats.membershipCourses;
+        
+        statsElement.textContent = `총 ${totalCourses}개 (대중제: ${publicCourses}개, 회원제: ${membershipCourses}개)`;
+        console.log(`📊 Golf stats displayed: ${totalCourses} total courses`);
+    } else {
+        statsElement.textContent = '데이터 로딩 중...';
+        console.log('⚠️ Golf stats: Using fallback data');
+    }
+}
+
+// 페이지 로드 시 위치 권한 상태 확인
+document.addEventListener('DOMContentLoaded', function() {
+    checkLocationPermission();
+    
+    // 웨일 브라우저 감지 시 안내 메시지 표시
+    const browser = detectBrowser();
+    const whaleNotice = document.getElementById('whale-notice');
+    
+    if (browser === 'whale' && whaleNotice) {
+        whaleNotice.style.display = 'flex';
+        console.log('🐋 Whale browser detected - showing special notice');
+    }
+    
+    // 골프장 통계 정보 표시
+    displayGolfStats();
+});
 
 // 기존 데이터 업데이트
 currentUser.currentLocation = null;

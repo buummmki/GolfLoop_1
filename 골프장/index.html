@@ -39,11 +39,11 @@
                     
                     <!-- 위치 기반 액션 버튼 -->
                     <div class="location-actions">
-                        <button class="location-btn primary" onclick="requestLocation()">
+                        <button class="location-btn primary" onclick="requestLocation()" id="location-request-btn">
                             <span class="location-icon">📍</span>
                             <div>
                                 <div class="btn-title">내 주변 골프장 찾기</div>
-                                <div class="btn-subtitle">근처 골프장 정보 보기</div>
+                                <div class="btn-subtitle">위치 권한 허용 후 근처 골프장 정보 보기</div>
                             </div>
                         </button>
                         <button class="location-btn secondary" onclick="location.href='golf-reviews.html'">
@@ -52,6 +52,15 @@
                                 <div class="btn-title">골프장 후기 작성</div>
                                 <div class="btn-subtitle">경험 공유하고 포인트 받기</div>
                             </div>
+                        </button>
+                    </div>
+                    
+                    <!-- 웨일 브라우저 안내 메시지 -->
+                    <div class="whale-notice" id="whale-notice" style="display: none;">
+                        <span>🐋 웨일 브라우저 사용자</span>
+                        <span>위치 권한 설정이 필요합니다. 자물쇠 아이콘을 클릭하여 위치 권한을 허용해주세요.</span>
+                        <button class="btn-secondary" onclick="showWhaleBrowserHelp()" style="margin-left: auto; padding: 4px 8px; font-size: 12px;">
+                            설정 도움말
                         </button>
                     </div>
 

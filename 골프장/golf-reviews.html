@@ -117,9 +117,38 @@
                                     <span>다른 골프장을 찾으시나요?</span>
                                     <button class="toggle-search-btn" onclick="toggleManualSearch()">직접 검색</button>
                                 </div>
+                                
+                                <!-- 전국 골프장 통계 -->
+                                <div class="golf-stats-info" id="golf-stats-info">
+                                    <div class="stats-summary">
+                                        <span>📊 전국 골프장 현황</span>
+                                        <span id="total-courses-count">로딩 중...</span>
+                                    </div>
+                                </div>
+                                
                                 <div class="manual-search-form" id="manual-search-form" style="display: none;">
-                                    <input type="text" id="manual-golf-search" placeholder="골프장명을 입력하세요" 
-                                           oninput="searchGolfCourses(this.value)">
+                                    <!-- 지역별 검색 -->
+                                    <div class="region-search-section">
+                                        <h4>🏘️ 지역별 검색</h4>
+                                        <div class="region-buttons">
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('서울')">서울</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('경기')">경기</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('인천')">인천</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('강원')">강원</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('충청')">충청</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('전라')">전라</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('경상')">경상</button>
+                                            <button type="button" class="region-btn" onclick="searchGolfCoursesByRegion('제주')">제주</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 이름으로 검색 -->
+                                    <div class="name-search-section">
+                                        <h4>🔍 골프장명으로 검색</h4>
+                                        <input type="text" id="manual-golf-search" placeholder="골프장명을 입력하세요 (2글자 이상)" 
+                                               oninput="searchGolfCourses(this.value)">
+                                    </div>
+                                    
                                     <div class="search-results" id="manual-search-results"></div>
                                 </div>
                             </div>

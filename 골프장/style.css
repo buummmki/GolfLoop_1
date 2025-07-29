@@ -188,29 +188,109 @@ body {
     opacity: 0.8;
 }
 
-/* 위치 상태 */
+/* 위치 권한 상태별 버튼 스타일 */
+.location-btn.permission-granted {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-color: #28a745;
+}
+
+.location-btn.permission-granted:hover {
+    background: linear-gradient(135deg, #218838, #1ea085);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.location-btn.permission-denied {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border-color: #dc3545;
+    opacity: 0.8;
+}
+
+.location-btn.permission-denied:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+}
+
+.location-btn.permission-prompt {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    border-color: #ffc107;
+    animation: permissionPulse 2s infinite;
+}
+
+.location-btn.permission-prompt:hover {
+    background: linear-gradient(135deg, #e0a800, #d39e00);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+}
+
+@keyframes permissionPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* 위치 권한 도움말 스타일 */
+.location-help {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.location-help h4 {
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.location-help ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.location-help li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.location-help li::before {
+    content: '📍';
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* 위치 상태 표시 개선 */
 .location-status {
-    margin: 30px 0;
-    padding: 20px;
-    background: rgba(0, 102, 255, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 102, 255, 0.2);
     border-radius: 12px;
+    padding: 15px 20px;
+    margin: 20px 0;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .current-location {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-weight: 600;
+    gap: 10px;
+    font-weight: 500;
     color: #0066ff;
 }
 
 .location-pin {
-    animation: pulse 2s infinite;
+    font-size: 20px;
+    animation: locationPulse 2s infinite;
 }
 
-@keyframes pulse {
+@keyframes locationPulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
 }
@@ -1587,4 +1667,208 @@ body {
     .form-actions {
         flex-direction: column;
     }
+} 
+
+/* 웨일 브라우저 특별 스타일 */
+.location-btn.whale-browser {
+    background: linear-gradient(135deg, #1e88e5, #1976d2);
+    border-color: #1e88e5;
+}
+
+.location-btn.whale-browser:hover {
+    background: linear-gradient(135deg, #1976d2, #1565c0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(30, 136, 229, 0.3);
+}
+
+/* 웨일 브라우저 안내 메시지 */
+.whale-notice {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 1px solid #2196f3;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #1565c0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.whale-notice::before {
+    content: '🐋';
+    font-size: 16px;
+}
+
+/* 브라우저별 아이콘 */
+.browser-icon {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.browser-icon.chrome::before { content: '🌐'; }
+.browser-icon.whale::before { content: '🐋'; }
+.browser-icon.firefox::before { content: '🦊'; }
+.browser-icon.safari::before { content: '🍎'; }
+.browser-icon.edge::before { content: '🔷'; } 
+
+/* 골프장 후기 작성 검색 스타일 */
+.region-search-section,
+.name-search-section {
+    margin-bottom: 20px;
+}
+
+.region-search-section h4,
+.name-search-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.region-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.region-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.region-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    transform: translateY(-1px);
+}
+
+.region-btn.active {
+    background: #0066ff;
+    color: white;
+    border-color: #0066ff;
+}
+
+.manual-search-form input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.manual-search-form input[type="text"]:focus {
+    outline: none;
+    border-color: #0066ff;
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+.search-results {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    margin-top: 10px;
+}
+
+.course-option {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.course-option:hover {
+    background: #f8f9fa;
+}
+
+.course-option:last-child {
+    border-bottom: none;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.course-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.course-meta {
+    font-size: 12px;
+    color: #6c757d;
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.course-location {
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 2px;
+}
+
+.course-region {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.no-results p {
+    margin: 5px 0;
+}
+
+.no-results p:first-child {
+    font-weight: 600;
+    color: #495057;
+} 
+
+/* 골프장 통계 정보 스타일 */
+.golf-stats-info {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 15px 0;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #495057;
+}
+
+.stats-summary span:first-child {
+    font-weight: 600;
+    color: #333;
+}
+
+.stats-summary span:last-child {
+    background: #0066ff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
 } 
