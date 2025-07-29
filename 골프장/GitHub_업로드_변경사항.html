@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GolfLoop - GitHub 업로드 변경사항</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            background: #f8f9fa;
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 15px 0;
+        }
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li:before {
+            content: "✅";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏌️ GolfLoop 2단계</h1>
+            <p>카카오 지도 및 골프장 검색 기능 추가 - GitHub 업로드 변경사항</p>
+        </div>
+        
+        <div class="content">
+            <!-- 1. 주요 변경사항 요약 -->
+            <div class="section">
+                <h2>📋 주요 변경사항 요약</h2>
+                <ul class="feature-list">
+                    <li>카카오 지도 SDK 통합 (API 키: 25171caa731cc576b1f8345acdebfcb9)</li>
+                    <li>골프장 키워드 검색 기능 추가</li>
+                    <li>사용자 현재 위치 표시 기능</li>
+                    <li>지도 마커 및 인포윈도우 구현</li>
+                    <li>지도 보기/숨기기 토글 기능</li>
+                    <li>골프장 새로고침 기능</li>
+                    <li>반응형 지도 UI 디자인</li>
+                </ul>
+            </div>
+
+            <!-- 2. 카카오 지도 SDK 변경 -->
+            <div class="section">
+                <h2>🗺️ 카카오 지도 SDK 변경</h2>
+                <div class="highlight">
+                    <strong>변경 전:</strong> clusterer 라이브러리 포함된 복잡한 SDK
+                </div>
+                <div class="code-block">
+&lt;script type="text/javascript" 
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=25171caa731cc576b1f8345acdebfcb9&libraries=services,clusterer"&gt;
+&lt;/script&gt;
+                </div>
+                <div class="highlight">
+                    <strong>변경 후:</strong> 간소화된 SDK (services만 포함)
+                </div>
+                <div class="code-block">
+&lt;script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=25171caa731cc576b1f8345acdebfcb9&libraries=services"&gt;&lt;/script&gt;
+                </div>
+            </div>
+
+            <!-- 3. 지도 섹션 HTML 추가 -->
+            <div class="section">
+                <h2>📍 지도 섹션 HTML 추가</h2>
+                <div class="code-block">
+&lt;!-- 🗺️ 카카오 지도 섹션 --&gt;
+&lt;div class="golf-map-section" id="golf-map-section" style="display: none;"&gt;
+    &lt;h3&gt;🗺️ 골프장 지도&lt;/h3&gt;
+    &lt;div id="map" style="width:100%; height:400px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1);"&gt;&lt;/div&gt;
+    &lt;div class="map-controls" style="margin-top: 16px; text-align: center;"&gt;
+        &lt;button class="btn-secondary" onclick="toggleMapView()"&gt;지도 숨기기&lt;/button&gt;
+        &lt;button class="cta-button" onclick="refreshGolfCourses()"&gt;골프장 새로고침&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <!-- 4. 지도 기능 JavaScript 추가 -->
+            <div class="section">
+                <h2>⚙️ 지도 기능 JavaScript 추가</h2>
+                <div class="code-block">
+&lt;!-- 🗺️ 카카오 지도 및 골프장 검색 기능 --&gt;
+&lt;script&gt;
+    var map; // 전역 지도 객체
+    var ps; // 전역 장소 검색 객체
+    var markers = []; // 마커 배열
+
+    // 지도 초기화
+    function initializeMap() {
+        var mapContainer = document.getElementById('map');
+        var mapOption = {
+            center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 시청
+            level: 5
+        };
+        map = new kakao.maps.Map(mapContainer, mapOption);
+        ps = new kakao.maps.services.Places();
+
+        // 초기 골프장 검색
+        searchGolfCourses();
+
+        // 사용자 현재 위치 표시
+        showUserLocation();
+    }
+
+    // 골프장 키워드 검색
+    function searchGolfCourses() {
+        ps.keywordSearch("골프장", function(data, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                // 기존 마커 제거
+                clearMarkers();
+                
+                for (var i = 0; i < data.length; i++) {
+                    var coords = new kakao.maps.LatLng(data[i].y, data[i].x);
+                    
+                    // 골프장 마커 생성
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords,
+                        title: data[i].place_name
+                    });
+                    
+                    markers.push(marker);
+
+                    // 인포윈도우 생성
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: `&lt;div style="padding:5px;font-size:12px;"&gt;⛳ ${data[i].place_name}&lt;/div&gt;`
+                    });
+
+                    // 마커 클릭 이벤트
+                    (function(marker, infowindow) {
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            infowindow.open(map, marker);
+                        });
+                    })(marker, infowindow);
+
+                    // 첫 번째 골프장을 중심으로 설정
+                    if (i === 0) map.setCenter(coords);
+                }
+                console.log(`✅ ${data.length}개 골프장을 지도에 표시했습니다.`);
+            } else {
+                console.warn('⚠️ 골프장 검색에 실패했습니다.');
+            }
+        });
+    }
+
+    // 사용자 현재 위치 표시
+    function showUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const userLocation = new kakao.maps.LatLng(lat, lon);
+
+                // 지도 중심을 사용자 위치로 설정
+                map.setCenter(userLocation);
+
+                // 사용자 위치 마커 생성
+                var userMarker = new kakao.maps.Marker({
+                    map: map,
+                    position: userLocation,
+                    image: new kakao.maps.MarkerImage(
+                        'data:image/svg+xml;base64,' + btoa(`
+                            &lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#2196F3"&gt;
+                                &lt;circle cx="12" cy="12" r="8"/&gt;
+                                &lt;circle cx="12" cy="12" r="4" fill="white"/&gt;
+                            &lt;/svg&gt;
+                        `),
+                        new kakao.maps.Size(24, 24)
+                    )
+                });
+
+                // 사용자 위치 인포윈도우
+                var userInfoWindow = new kakao.maps.InfoWindow({
+                    content: '&lt;div style="padding:5px;font-size:12px;"&gt;📍 내 위치&lt;/div&gt;'
+                });
+
+                kakao.maps.event.addListener(userMarker, 'click', function() {
+                    userInfoWindow.open(map, userMarker);
+                });
+
+                console.log('✅ 사용자 현재 위치를 지도에 표시했습니다.');
+            }, function(error) {
+                console.warn('⚠️ 위치 정보를 가져올 수 없습니다:', error.message);
+            });
+        } else {
+            console.warn('⚠️ 이 브라우저는 위치 정보를 지원하지 않습니다.');
+        }
+    }
+
+    // 마커 제거
+    function clearMarkers() {
+        markers.forEach(marker => marker.setMap(null));
+        markers = [];
+    }
+
+    // 지도 보기/숨기기 토글
+    function toggleMapView() {
+        const mapSection = document.getElementById('golf-map-section');
+        if (mapSection.style.display === 'none') {
+            mapSection.style.display = 'block';
+            initializeMap();
+        } else {
+            mapSection.style.display = 'none';
+        }
+    }
+
+    // 골프장 새로고침
+    function refreshGolfCourses() {
+        if (map) {
+            searchGolfCourses();
+            showToast('🔄 골프장 정보를 새로고침했습니다.');
+        }
+    }
+&lt;/script&gt;
+                </div>
+            </div>
+
+            <!-- 5. requestLocation 함수 수정 -->
+            <div class="section">
+                <h2>🔧 requestLocation 함수 수정</h2>
+                <div class="highlight">
+                    <strong>주요 변경사항:</strong> 지도 섹션 자동 표시 및 지도 초기화 로직 추가
+                </div>
+                <div class="code-block">
+// 향상된 위치 기반 골프장 찾기
+async function requestLocation() {
+    try {
+        showToast('내 주변 골프장을 찾는 중...');
+        
+        // 🗺️ 지도 섹션 표시
+        const mapSection = document.getElementById('golf-map-section');
+        mapSection.style.display = 'block';
+        
+        // 지도 초기화 (아직 초기화되지 않은 경우)
+        if (!map) {
+            initializeMap();
+        }
+        
+        // 사용자 위치 가져오기
+        const userLocation = await window.LocationService.getUserLocation();
+        
+        // 주변 골프장 검색
+        const nearbyGolfCourses = await window.LocationService.searchNearbyGolfCourses(
+            userLocation.latitude,
+            userLocation.longitude,
+            10000 // 10km 반경
+        );
+
+        // 기존 함수에 실제 데이터 전달
+        showNearbyGolfCourses(nearbyGolfCourses);
+        
+        showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+        
+    } catch (error) {
+        console.error('위치 기반 검색 실패:', error);
+        let message = '위치를 확인할 수 없습니다.';
+        
+        if (error.message.includes('권한')) {
+            message = '위치 권한이 필요합니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+        } else if (error.message.includes('시간')) {
+            message = '위치 확인에 시간이 오래 걸리고 있습니다.';
+        }
+        
+        showToast(`⚠️ ${message}`);
+        
+        // 🗺️ 지도 섹션은 여전히 표시하고 기본 골프장 검색 수행
+        const mapSection = document.getElementById('golf-map-section');
+        mapSection.style.display = 'block';
+        
+        if (!map) {
+            initializeMap();
+        }
+    }
+}
+                </div>
+            </div>
+
+            <!-- 6. GitHub 업로드 방법 -->
+            <div class="section">
+                <h2>🚀 GitHub 업로드 방법</h2>
+                <div class="success">
+                    <strong>권장 방법:</strong> GitHub.dev 사용
+                </div>
+                <ol>
+                    <li><strong>GitHub.dev 접속:</strong> <a href="https://github.dev/buummmki/GolfLoop_1" target="_blank">https://github.dev/buummmki/GolfLoop_1</a></li>
+                    <li><strong>골프장 폴더 열기</strong></li>
+                    <li><strong>index.html 파일 수정</strong></li>
+                    <li><strong>소스 컨트롤 탭에서 커밋</strong></li>
+                    <li><strong>커밋 메시지:</strong> "✨ 카카오 지도 및 골프장 키워드 검색 기능 추가"</li>
+                </ol>
+                
+                <div class="warning">
+                    <strong>주의사항:</strong> Git이 로컬에 설치되지 않은 경우 GitHub 웹 인터페이스를 사용하세요.
+                </div>
+            </div>
+
+            <!-- 7. 테스트 방법 -->
+            <div class="section">
+                <h2>🧪 테스트 방법</h2>
+                <ul class="feature-list">
+                    <li>웹사이트 접속: https://buummmki.github.io/GolfLoop_1/골프장/</li>
+                    <li>"내 주변 골프장 찾기" 버튼 클릭</li>
+                    <li>지도 섹션이 표시되는지 확인</li>
+                    <li>골프장 마커가 지도에 표시되는지 확인</li>
+                    <li>마커 클릭 시 인포윈도우가 나타나는지 확인</li>
+                    <li>사용자 위치가 파란색 마커로 표시되는지 확인</li>
+                    <li>"지도 숨기기" 및 "골프장 새로고침" 버튼 동작 확인</li>
+                </ul>
+            </div>
+
+            <!-- 8. 다음 단계 -->
+            <div class="section">
+                <h2>🎯 다음 단계</h2>
+                <div class="highlight">
+                    <strong>GolfLoop 3단계 예정:</strong>
+                </div>
+                <ul class="feature-list">
+                    <li>골프장 상세 정보 페이지 구현</li>
+                    <li>실시간 그린 상태 업데이트 기능</li>
+                    <li>골프장 예약 시스템 연동</li>
+                    <li>사용자 리뷰 및 평점 시스템</li>
+                    <li>모바일 앱 버전 개발</li>
+                </ul>
+            </div>
+
+            <!-- 9. 링크 -->
+            <div class="section">
+                <h2>🔗 관련 링크</h2>
+                <a href="https://github.dev/buummmki/GolfLoop_1" class="btn" target="_blank">GitHub.dev 편집</a>
+                <a href="https://buummmki.github.io/GolfLoop_1/골프장/" class="btn" target="_blank">라이브 사이트</a>
+                <a href="https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js" class="btn btn-secondary" target="_blank">카카오 지도 API 문서</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

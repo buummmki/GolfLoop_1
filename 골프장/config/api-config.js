@@ -3,43 +3,28 @@
  * 카카오 지도/위치 API 통합 관리
  */
 
-// ⚠️ 실제 운영 시에는 환경변수(.env)로 관리하세요!
+// GolfLoop API 설정
 const API_CONFIG = {
-    // 카카오 개발자센터에서 발급받은 JavaScript 키
+    // 카카오 API 키
     KAKAO_APP_KEY: '25171caa731cc576b1f8345acdebfcb9',
-    
-    // 카카오 REST API 키 (서버 사이드 호출용)
     KAKAO_REST_KEY: 'b7f8ba92ee7993c3311c1653718788aa',
     
     // API 엔드포인트
-    ENDPOINTS: {
-        // 키워드로 장소 검색
+    API_ENDPOINTS: {
+        // 장소 검색 API
         PLACE_SEARCH: 'https://dapi.kakao.com/v2/local/search/keyword.json',
-        
-        // 주소 검색 (주소 → 좌표)
+        // 주소 검색 API
         ADDRESS_SEARCH: 'https://dapi.kakao.com/v2/local/search/address.json',
-        
-        // 좌표 → 주소 변환
-        COORD_TO_ADDRESS: 'https://dapi.kakao.com/v2/local/geo/coord2address.json',
-        
-        // 카테고리로 장소 검색
-        CATEGORY_SEARCH: 'https://dapi.kakao.com/v2/local/search/category.json'
+        // 좌표 변환 API
+        COORD_TO_ADDRESS: 'https://dapi.kakao.com/v2/local/geo/coord2address.json'
     },
     
-    // 검색 옵션
-    SEARCH_OPTIONS: {
-        // 골프장 검색 반경 (미터)
-        GOLF_SEARCH_RADIUS: 10000, // 10km
-        
-        // 기본 검색 결과 개수
-        DEFAULT_SIZE: 15,
-        
-        // 골프장 카테고리 코드
-        GOLF_CATEGORY: 'AT4', // 관광명소 > 골프장
-        
-        // 검색 키워드
-        GOLF_KEYWORDS: ['골프장', '골프클럽', '컨트리클럽', '골프리조트']
-    }
+    // 기본 설정
+    DEFAULT_RADIUS: 10000, // 10km
+    MAX_RESULTS: 15,
+    
+    // 캐시 설정
+    CACHE_DURATION: 5 * 60 * 1000 // 5분
 };
 
 /**
@@ -142,12 +127,5 @@ function formatDistance(distance) {
     }
 }
 
-// 전역 객체로 내보내기
-window.GolfLoopAPI = {
-    config: API_CONFIG,
-    initKakaoMap,
-    getApiHeaders,
-    getCurrentPosition,
-    calculateDistance,
-    formatDistance
-}; 
+// 전역 객체로 노출
+window.GolfLoopAPI = API_CONFIG; 

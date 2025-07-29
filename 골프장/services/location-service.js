@@ -1,218 +1,240 @@
-/**
- * GolfLoop 위치 기반 서비스
- * 카카오 API를 활용한 골프장 검색 및 위치 관리
- */
-
+// GolfLoop 위치 서비스
 class LocationService {
     constructor() {
-        this.config = window.GolfLoopAPI?.config || {};
-        this.cache = new Map(); // 검색 결과 캐시
-        this.userLocation = null;
+        this.cache = new Map();
+        this.config = window.GolfLoopAPI;
     }
 
-    /**
-     * 📍 사용자 현재 위치 가져오기
-     */
-    async getUserLocation() {
+    // API 헤더 생성
+    getApiHeaders() {
+        return {
+            'Authorization': `KakaoAK ${this.config.KAKAO_REST_KEY}`,
+            'Content-Type': 'application/json'
+        };
+    }
+
+    // 캐시 키 생성
+    getCacheKey(key, params) {
+        return `${key}_${JSON.stringify(params)}`;
+    }
+
+    // 캐시에서 데이터 가져오기
+    getFromCache(key) {
+        const cached = this.cache.get(key);
+        if (cached && Date.now() - cached.timestamp < this.config.CACHE_DURATION) {
+            return cached.data;
+        }
+        return null;
+    }
+
+    // 캐시에 데이터 저장
+    setCache(key, data) {
+        this.cache.set(key, {
+            data: data,
+            timestamp: Date.now()
+        });
+    }
+
+    // API 호출
+    async callApi(url, params = {}) {
         try {
-            if (this.userLocation) {
-                return this.userLocation;
+            const queryString = new URLSearchParams(params).toString();
+            const fullUrl = `${url}?${queryString}`;
+            
+            const response = await fetch(fullUrl, {
+                method: 'GET',
+                headers: this.getApiHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`API 호출 실패: ${response.status}`);
             }
 
-            const position = await window.GolfLoopAPI.getCurrentPosition();
-            this.userLocation = position;
-            
-            // 주소 정보도 함께 가져오기
-            const address = await this.getAddressFromCoords(
-                position.latitude, 
-                position.longitude
-            );
-            
-            this.userLocation.address = address;
-            
-            console.log('📍 사용자 위치 확인:', this.userLocation);
-            return this.userLocation;
-            
+            const data = await response.json();
+            return data;
         } catch (error) {
-            console.error('위치 가져오기 실패:', error);
+            console.error('API 호출 오류:', error);
             throw error;
         }
     }
 
-    /**
-     * ⛳ 주변 골프장 검색
-     */
-    async searchNearbyGolfCourses(latitude, longitude, radius = 10000) {
-        try {
-            const cacheKey = `golf_${latitude}_${longitude}_${radius}`;
-            
-            // 캐시 확인
-            if (this.cache.has(cacheKey)) {
-                console.log('🔄 캐시에서 골프장 데이터 로드');
-                return this.cache.get(cacheKey);
+    // 사용자 현재 위치 가져오기
+    async getUserLocation() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error('브라우저가 위치 정보를 지원하지 않습니다.'));
+                return;
             }
 
-            const params = new URLSearchParams({
-                query: '골프장',
-                x: longitude.toString(),
-                y: latitude.toString(),
-                radius: radius.toString(),
-                size: '15',
-                sort: 'distance'
-            });
-
-            const response = await fetch(
-                `${this.config.ENDPOINTS.PLACE_SEARCH}?${params}`,
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                },
+                (error) => {
+                    let message = '위치를 가져올 수 없습니다.';
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            message = '위치 권한이 거부되었습니다.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message = '위치 정보를 사용할 수 없습니다.';
+                            break;
+                        case error.TIMEOUT:
+                            message = '위치 요청 시간이 초과되었습니다.';
+                            break;
+                    }
+                    reject(new Error(message));
+                },
                 {
-                    headers: window.GolfLoopAPI.getApiHeaders(true)
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000 // 5분
                 }
             );
-
-            if (!response.ok) {
-                throw new Error(`API 요청 실패: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            // 골프장 데이터 가공
-            const golfCourses = data.documents.map(place => {
-                const distance = window.GolfLoopAPI.calculateDistance(
-                    latitude, longitude,
-                    parseFloat(place.y), parseFloat(place.x)
-                );
-
-                return {
-                    id: place.id,
-                    name: place.place_name,
-                    address: place.road_address_name || place.address_name,
-                    phone: place.phone,
-                    latitude: parseFloat(place.y),
-                    longitude: parseFloat(place.x),
-                    distance: distance,
-                    distanceText: window.GolfLoopAPI.formatDistance(distance),
-                    category: place.category_name,
-                    url: place.place_url,
-                    // 추가 골프장 정보 (임시)
-                    rating: (Math.random() * 2 + 3).toFixed(1), // 3.0-5.0
-                    reviewCount: Math.floor(Math.random() * 200) + 10,
-                    price: this.generateGolfPrice(),
-                    status: this.getRandomStatus()
-                };
-            });
-
-            // 거리순 정렬
-            golfCourses.sort((a, b) => a.distance - b.distance);
-            
-            // 캐시 저장 (5분)
-            this.cache.set(cacheKey, golfCourses);
-            setTimeout(() => this.cache.delete(cacheKey), 5 * 60 * 1000);
-
-            console.log(`⛳ ${golfCourses.length}개 골프장 검색 완료`);
-            return golfCourses;
-
-        } catch (error) {
-            console.error('골프장 검색 실패:', error);
-            return [];
-        }
+        });
     }
 
-    /**
-     * 🔍 골프장 이름으로 검색
-     */
-    async searchGolfCourseByName(query) {
+    // 주변 골프장 검색
+    async searchNearbyGolfCourses(latitude, longitude, radius = null) {
+        const cacheKey = this.getCacheKey('nearby_golf', { lat: latitude, lng: longitude, radius });
+        const cached = this.getFromCache(cacheKey);
+        
+        if (cached) {
+            console.log('캐시에서 골프장 데이터 로드');
+            return cached;
+        }
+
         try {
-            const params = new URLSearchParams({
-                query: `${query} 골프장`,
-                size: '10'
-            });
+            const params = {
+                query: '골프장',
+                x: longitude,
+                y: latitude,
+                radius: radius || this.config.DEFAULT_RADIUS,
+                size: this.config.MAX_RESULTS
+            };
 
-            const response = await fetch(
-                `${this.config.ENDPOINTS.PLACE_SEARCH}?${params}`,
-                {
-                    headers: window.GolfLoopAPI.getApiHeaders(true)
-                }
-            );
-
-            const data = await response.json();
+            const data = await this.callApi(this.config.API_ENDPOINTS.PLACE_SEARCH, params);
             
-            return data.documents.map(place => ({
+            const golfCourses = data.documents.map(place => ({
                 id: place.id,
                 name: place.place_name,
-                address: place.road_address_name || place.address_name,
+                address: place.address_name,
+                roadAddress: place.road_address_name,
                 phone: place.phone,
+                category: place.category_name,
+                distance: parseInt(place.distance),
                 latitude: parseFloat(place.y),
                 longitude: parseFloat(place.x),
-                category: place.category_name,
                 url: place.place_url
             }));
 
+            // 거리순 정렬
+            golfCourses.sort((a, b) => a.distance - b.distance);
+
+            this.setCache(cacheKey, golfCourses);
+            console.log(`⛳ ${golfCourses.length}개 골프장 검색 완료`);
+            
+            return golfCourses;
         } catch (error) {
-            console.error('골프장 이름 검색 실패:', error);
-            return [];
+            console.error('주변 골프장 검색 실패:', error);
+            throw error;
         }
     }
 
-    /**
-     * 📍 좌표 → 주소 변환
-     */
-    async getAddressFromCoords(latitude, longitude) {
+    // 지역별 골프장 검색
+    async searchGolfCoursesByRegion(region) {
+        const cacheKey = this.getCacheKey('region_golf', { region });
+        const cached = this.getFromCache(cacheKey);
+        
+        if (cached) {
+            return cached;
+        }
+
         try {
-            const params = new URLSearchParams({
-                x: longitude.toString(),
-                y: latitude.toString(),
-                input_coord: 'WGS84'
-            });
+            const params = {
+                query: `${region} 골프장`,
+                size: this.config.MAX_RESULTS
+            };
 
-            const response = await fetch(
-                `${this.config.ENDPOINTS.COORD_TO_ADDRESS}?${params}`,
-                {
-                    headers: window.GolfLoopAPI.getApiHeaders(true)
-                }
-            );
-
-            const data = await response.json();
+            const data = await this.callApi(this.config.API_ENDPOINTS.PLACE_SEARCH, params);
             
-            if (data.documents && data.documents.length > 0) {
-                const doc = data.documents[0];
-                const roadAddress = doc.road_address;
-                const jibunAddress = doc.address;
-                
-                return {
-                    roadAddress: roadAddress ? roadAddress.address_name : '',
-                    jibunAddress: jibunAddress ? jibunAddress.address_name : '',
-                    region: jibunAddress ? jibunAddress.region_1depth_name : '',
-                    district: jibunAddress ? jibunAddress.region_2depth_name : '',
-                    formatted: roadAddress ? roadAddress.address_name : jibunAddress?.address_name || ''
-                };
-            }
-            
-            return null;
+            const golfCourses = data.documents.map(place => ({
+                id: place.id,
+                name: place.place_name,
+                address: place.address_name,
+                roadAddress: place.road_address_name,
+                phone: place.phone,
+                category: place.category_name,
+                region: region,
+                latitude: parseFloat(place.y),
+                longitude: parseFloat(place.x),
+                url: place.place_url
+            }));
 
+            this.setCache(cacheKey, golfCourses);
+            console.log(`${region} 지역 ${golfCourses.length}개 골프장 검색 완료`);
+            
+            return golfCourses;
         } catch (error) {
-            console.error('주소 변환 실패:', error);
-            return null;
+            console.error('지역별 골프장 검색 실패:', error);
+            throw error;
         }
     }
 
-    /**
-     * 🏠 주소 → 좌표 변환
-     */
-    async getCoordsFromAddress(address) {
+    // 골프장명으로 검색
+    async searchGolfCourseByName(query) {
+        const cacheKey = this.getCacheKey('name_golf', { query });
+        const cached = this.getFromCache(cacheKey);
+        
+        if (cached) {
+            return cached;
+        }
+
         try {
-            const params = new URLSearchParams({
+            const params = {
+                query: query,
+                size: this.config.MAX_RESULTS
+            };
+
+            const data = await this.callApi(this.config.API_ENDPOINTS.PLACE_SEARCH, params);
+            
+            const golfCourses = data.documents
+                .filter(place => place.category_name.includes('골프') || place.place_name.includes('골프'))
+                .map(place => ({
+                    id: place.id,
+                    name: place.place_name,
+                    address: place.address_name,
+                    roadAddress: place.road_address_name,
+                    phone: place.phone,
+                    category: place.category_name,
+                    latitude: parseFloat(place.y),
+                    longitude: parseFloat(place.x),
+                    url: place.place_url
+                }));
+
+            this.setCache(cacheKey, golfCourses);
+            console.log(`"${query}" 검색 결과: ${golfCourses.length}개 골프장`);
+            
+            return golfCourses;
+        } catch (error) {
+            console.error('골프장명 검색 실패:', error);
+            throw error;
+        }
+    }
+
+    // 주소를 좌표로 변환
+    async addressToCoordinates(address) {
+        try {
+            const params = {
                 query: address
-            });
+            };
 
-            const response = await fetch(
-                `${this.config.ENDPOINTS.ADDRESS_SEARCH}?${params}`,
-                {
-                    headers: window.GolfLoopAPI.getApiHeaders(true)
-                }
-            );
-
-            const data = await response.json();
+            const data = await this.callApi(this.config.API_ENDPOINTS.ADDRESS_SEARCH, params);
             
-            if (data.documents && data.documents.length > 0) {
+            if (data.documents.length > 0) {
                 const doc = data.documents[0];
                 return {
                     latitude: parseFloat(doc.y),
@@ -221,96 +243,60 @@ class LocationService {
                 };
             }
             
-            return null;
+            throw new Error('주소를 찾을 수 없습니다.');
+        } catch (error) {
+            console.error('주소 변환 실패:', error);
+            throw error;
+        }
+    }
 
+    // 좌표를 주소로 변환
+    async coordinatesToAddress(latitude, longitude) {
+        try {
+            const params = {
+                x: longitude,
+                y: latitude
+            };
+
+            const data = await this.callApi(this.config.API_ENDPOINTS.COORD_TO_ADDRESS, params);
+            
+            if (data.documents.length > 0) {
+                const doc = data.documents[0];
+                return {
+                    address: doc.address.address_name,
+                    roadAddress: doc.road_address?.address_name || '',
+                    region: doc.address.region_1depth_name,
+                    city: doc.address.region_2depth_name
+                };
+            }
+            
+            throw new Error('좌표에 해당하는 주소를 찾을 수 없습니다.');
         } catch (error) {
             console.error('좌표 변환 실패:', error);
-            return null;
+            throw error;
         }
     }
 
-    /**
-     * 🎯 지역별 골프장 검색
-     */
-    async searchGolfCoursesByRegion(region) {
-        try {
-            const params = new URLSearchParams({
-                query: `${region} 골프장`,
-                size: '15'
-            });
-
-            const response = await fetch(
-                `${this.config.ENDPOINTS.PLACE_SEARCH}?${params}`,
-                {
-                    headers: window.GolfLoopAPI.getApiHeaders(true)
-                }
-            );
-
-            const data = await response.json();
-            
-            return data.documents.map(place => ({
-                id: place.id,
-                name: place.place_name,
-                address: place.road_address_name || place.address_name,
-                phone: place.phone,
-                latitude: parseFloat(place.y),
-                longitude: parseFloat(place.x),
-                category: place.category_name,
-                url: place.place_url,
-                rating: (Math.random() * 2 + 3).toFixed(1),
-                reviewCount: Math.floor(Math.random() * 200) + 10,
-                price: this.generateGolfPrice()
-            }));
-
-        } catch (error) {
-            console.error('지역별 골프장 검색 실패:', error);
-            return [];
-        }
+    // 두 지점 간 거리 계산 (Haversine 공식)
+    calculateDistance(lat1, lng1, lat2, lng2) {
+        const R = 6371; // 지구 반지름 (km)
+        const dLat = this.toRadians(lat2 - lat1);
+        const dLng = this.toRadians(lng2 - lng1);
+        
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        
+        return distance;
     }
 
-    /**
-     * 💰 골프장 가격 생성 (임시 데이터)
-     */
-    generateGolfPrice() {
-        const basePrice = Math.floor(Math.random() * 100000) + 80000; // 80,000 ~ 180,000
-        return {
-            weekday: basePrice,
-            weekend: Math.floor(basePrice * 1.5),
-            formatted: `평일 ${basePrice.toLocaleString()}원`
-        };
-    }
-
-    /**
-     * 📊 골프장 상태 생성 (임시 데이터)
-     */
-    getRandomStatus() {
-        const statuses = ['excellent', 'good', 'normal', 'poor'];
-        const weights = [0.3, 0.4, 0.25, 0.05]; // 확률 가중치
-        
-        const random = Math.random();
-        let sum = 0;
-        
-        for (let i = 0; i < statuses.length; i++) {
-            sum += weights[i];
-            if (random <= sum) {
-                return statuses[i];
-            }
-        }
-        
-        return 'good';
-    }
-
-    /**
-     * 🗑️ 캐시 클리어
-     */
-    clearCache() {
-        this.cache.clear();
-        this.userLocation = null;
-        console.log('🗑️ 위치 서비스 캐시 클리어');
+    toRadians(degrees) {
+        return degrees * (Math.PI / 180);
     }
 }
 
-// 전역 인스턴스 생성
-window.LocationService = new LocationService();
-
-console.log('🗺️ LocationService 초기화 완료'); 
+// 전역 객체로 노출
+window.LocationService = new LocationService(); 
