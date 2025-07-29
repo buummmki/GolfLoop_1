@@ -17,7 +17,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 27,
             totalArea: 998126,
             type: '대중제',
-            owner: '인서울27골프클럽㈜ (김태호)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -37,7 +36,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 1441066,
             type: '회원제',
-            owner: '이승호',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -53,7 +51,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 880053,
             type: '회원제',
-            owner: '성하현',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -69,7 +66,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 9,
             totalArea: 295598,
             type: '대중제',
-            owner: '김기자',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -85,7 +81,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 9,
             totalArea: 313921,
             type: '대중제',
-            owner: '이관식',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -101,7 +96,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 27,
             totalArea: 1024961,
             type: '회원제',
-            owner: '김인식',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -117,7 +111,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 1480410,
             type: '회원제',
-            owner: '김효석,김우현',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -133,7 +126,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 1366197,
             type: '회원제',
-            owner: '이응로',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -149,7 +141,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 2814762,
             type: '회원제',
-            owner: '국가보훈처장',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -165,7 +156,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 3198002,
             type: '대중제',
-            owner: '문지태',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -181,7 +171,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 2230679,
             type: '회원제',
-            owner: '김성일',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -201,7 +190,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 811919,
             type: '회원제',
-            owner: '㈜신태진',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -217,7 +205,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 771912,
             type: '회원제',
-            owner: '송도국제도시개발유한회사',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -233,7 +220,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 63,
             totalArea: 2685450,
             type: '대중제',
-            owner: '스카이72㈜',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -253,7 +239,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 1079662,
             type: '대중제',
-            owner: '㈜강원랜드(이삼걸)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -269,7 +254,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 1839621,
             type: '회원제',
-            owner: '에이치디씨리조트㈜(조영환)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -285,7 +269,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 838497,
             type: '회원제',
-            owner: '(주)에이치제이매그놀리아 용평호텔앤리조트(신달순)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -301,7 +284,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 1058644,
             type: '회원제',
-            owner: '휘닉스중앙 주식회사(이윤규)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -321,7 +303,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 27,
             totalArea: 1696299,
             type: '회원제',
-            owner: '청주개발㈜(임재풍)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         },
@@ -337,7 +318,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 36,
             totalArea: 1567859,
             type: '대중제',
-            owner: '㈜떼제베운영(최영범)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -357,7 +337,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 27,
             totalArea: 1496123,
             type: '회원제',
-            owner: '세종에머슨㈜',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -377,7 +356,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 81,
             totalArea: 2000000,
             type: '대중제',
-            owner: '군산컨트리클럽',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -397,7 +375,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 27,
             totalArea: 1000000,
             type: '회원제',
-            owner: '여수경도컨트리클럽',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -417,7 +394,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 769047,
             type: '회원제',
-            owner: '우경개발㈜(정찬우)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -437,7 +413,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 971759,
             type: '회원제',
-            owner: '(사)부산컨트리클럽(서정의)',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }
@@ -457,7 +432,6 @@ const GOLF_COURSES_COMPLETE_2024 = {
             holes: 18,
             totalArea: 1000000,
             type: '회원제',
-            owner: '나인브릿지골프클럽',
             status: '운영중',
             lastUpdate: '2024.07.17'
         }

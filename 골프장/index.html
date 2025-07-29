@@ -688,9 +688,9 @@
     <script src="services/location-service.js"></script>
     <script src="services/review-location-service.js"></script>
     
-    <!-- 문화체육관광부 골프장 데이터베이스 -->
-    <script src="data/golf-courses-database.js"></script>
-    <script src="services/golf-courses-service.js"></script>
+    <!-- 2024년 완전한 골프장 데이터베이스 -->
+    <script src="data/golf-courses-complete-2024.js"></script>
+    <script src="services/golf-courses-service-2024.js"></script>
     
     <!-- 기존 스크립트 -->
     <script src="script.js"></script>
@@ -714,7 +714,7 @@
             });
         });
 
-        // 문화체육관광부 데이터 기반 위치 기반 골프장 찾기
+        // 2024년 완전한 데이터 기반 위치 기반 골프장 찾기
         async function requestLocation() {
             try {
                 showToast('내 주변 골프장을 찾는 중...');
@@ -722,8 +722,8 @@
                 // 사용자 위치 가져오기
                 const userLocation = await window.LocationService.getUserLocation();
                 
-                // 주변 골프장 검색 (문화체육관광부 데이터 사용)
-                const nearbyGolfCourses = window.GolfCoursesService.searchNearbyGolfCourses(
+                // 주변 골프장 검색 (2024년 완전한 데이터 사용)
+                const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
                     userLocation.latitude,
                     userLocation.longitude,
                     10000 // 10km 반경
@@ -751,7 +751,7 @@
             }
         }
 
-        // 문화체육관광부 데이터 기반 후기 작성 위치 감지
+        // 2024년 완전한 데이터 기반 후기 작성 위치 감지
         async function detectCurrentLocation() {
             try {
                 const recommendations = await window.ReviewLocationService.detectAndRecommendGolfCourses();
@@ -763,12 +763,12 @@
             }
         }
 
-        // 문화체육관광부 데이터 기반 지역별 골프장 검색
+        // 2024년 완전한 데이터 기반 지역별 골프장 검색
         async function searchByRegion(region) {
             try {
                 showToast(`${region} 지역의 골프장을 검색 중...`);
                 
-                const golfCourses = window.GolfCoursesService.searchGolfCoursesByRegion(region);
+                const golfCourses = window.GolfCoursesService2024.searchGolfCoursesByRegion(region);
                 
                 // 검색 결과 표시
                 const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
@@ -782,7 +782,7 @@
             }
         }
 
-        // 문화체육관광부 데이터 기반 골프장명 검색
+        // 2024년 완전한 데이터 기반 골프장명 검색
         async function searchByName(query) {
             if (!query || query.trim().length < 2) {
                 showToast('골프장명을 2글자 이상 입력해주세요.');
@@ -792,7 +792,7 @@
             try {
                 showToast('골프장을 검색 중...');
                 
-                const golfCourses = window.GolfCoursesService.searchGolfCourseByName(query.trim());
+                const golfCourses = window.GolfCoursesService2024.searchGolfCourseByName(query.trim());
                 
                 // 검색 결과 표시
                 const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
@@ -817,7 +817,8 @@
                 distance: course.distanceText || null,
                 phone: course.phone,
                 address: course.address,
-                holes: course.holes
+                holes: course.holes,
+                totalArea: course.totalArea
             }));
         }
 
@@ -825,17 +826,17 @@
         function checkApiStatus() {
             const hasKakao = typeof kakao !== 'undefined';
             const hasConfig = typeof window.GolfLoopAPI !== 'undefined';
-            const hasDatabase = typeof window.GolfCoursesDatabase !== 'undefined';
-            const hasService = typeof window.GolfCoursesService !== 'undefined';
+            const hasDatabase = typeof window.GolfCoursesComplete2024 !== 'undefined';
+            const hasService = typeof window.GolfCoursesService2024 !== 'undefined';
             
             console.log('📊 API 상태 체크:');
             console.log('- 카카오 SDK:', hasKakao ? '✅' : '❌');
             console.log('- API 설정:', hasConfig ? '✅' : '❌');
-            console.log('- 골프장 데이터베이스:', hasDatabase ? '✅' : '❌');
-            console.log('- 골프장 서비스:', hasService ? '✅' : '❌');
+            console.log('- 2024년 골프장 데이터베이스:', hasDatabase ? '✅' : '❌');
+            console.log('- 2024년 골프장 서비스:', hasService ? '✅' : '❌');
             
             if (hasDatabase) {
-                const stats = window.GolfCoursesService.getGolfCourseStats();
+                const stats = window.GolfCoursesService2024.getGolfCourseStats();
                 console.log(`📈 골프장 통계: 총 ${stats.total}개 골프장`);
             }
         }

@@ -1,9 +1,9 @@
-// GolfLoop 골프장 데이터 서비스 v2.0
-// 2024년 7월 기준 전국 골프장 현황 데이터 기반
+// GolfLoop 골프장 데이터 서비스 v3.0
+// 2024년 완전한 전국 골프장 현황 데이터 기반
 
 class GolfCoursesService2024 {
     constructor() {
-        this.database = window.GolfCoursesDatabase2024 || {};
+        this.database = window.GolfCoursesComplete2024 || {};
         this.cache = new Map();
     }
 

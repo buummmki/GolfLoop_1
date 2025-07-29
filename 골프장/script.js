@@ -726,8 +726,8 @@ function getRatingValue(rating) {
 
 // ============= 위치 기반 기능들 =============
 
-// 위치 권한 요청 및 근처 골프장 찾기 (히어로 섹션)
-function requestLocation() {
+// 위치 기반 골프장 찾기 (2024년 완전한 데이터베이스 사용)
+async function requestLocation() {
     showToast('내 주변 골프장을 찾는 중...');
     
     if (!navigator.geolocation) {
@@ -737,46 +737,64 @@ function requestLocation() {
     
     // 위치 상태 표시
     const locationStatus = document.getElementById('location-status');
-    locationStatus.style.display = 'block';
+    if (locationStatus) {
+        locationStatus.style.display = 'block';
+    }
     
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
-            currentUser.currentLocation = { lat: latitude, lng: longitude };
-            
-            // 위치 정보 업데이트
-            updateLocationStatus(latitude, longitude);
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            });
+        });
+        
+        const { latitude, longitude } = position.coords;
+        currentUser.currentLocation = { lat: latitude, lng: longitude };
+        
+        // 위치 정보 업데이트
+        updateLocationStatus(latitude, longitude);
+        
+        // 2024년 완전한 데이터베이스에서 주변 골프장 검색
+        if (window.GolfCoursesService2024) {
+            const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
+                latitude, 
+                longitude, 
+                10000 // 10km 반경
+            );
             
             // 근처 골프장 표시
+            showNearbyGolfCourses(nearbyGolfCourses);
+            
+            showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+        } else {
+            // 서비스가 없으면 기본 더미 데이터 사용
             showNearbyGolfCourses();
-            
             showToast('✅ 근처 골프장을 찾았습니다!');
-        },
-        (error) => {
-            console.error('위치 오류:', error);
-            let errorMessage = '위치를 확인할 수 없습니다.';
-            
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = '위치 권한이 필요합니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = '현재 위치를 확인할 수 없습니다.';
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = '위치 확인에 시간이 오래 걸리고 있습니다.';
-                    break;
-            }
-            
-            alert(errorMessage);
-            locationStatus.style.display = 'none';
-        },
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000
         }
-    );
+        
+    } catch (error) {
+        console.error('위치 오류:', error);
+        let errorMessage = '위치를 확인할 수 없습니다.';
+        
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                errorMessage = '위치 권한이 필요합니다. 브라우저 설정에서 위치 권한을 허용해주세요.';
+                break;
+            case error.POSITION_UNAVAILABLE:
+                errorMessage = '현재 위치를 확인할 수 없습니다.';
+                break;
+            case error.TIMEOUT:
+                errorMessage = '위치 확인에 시간이 오래 걸리고 있습니다.';
+                break;
+        }
+        
+        showToast(`⚠️ ${errorMessage}`);
+        if (locationStatus) {
+            locationStatus.style.display = 'none';
+        }
+    }
 }
 
 // 위치 상태 업데이트
@@ -801,18 +819,30 @@ function getLocationAddress(lat, lng) {
     return addresses[Math.floor(Math.random() * addresses.length)];
 }
 
-// 근처 골프장 표시
-function showNearbyGolfCourses() {
+// 근처 골프장 표시 (2024년 데이터베이스 형식 지원)
+function showNearbyGolfCourses(courses = null) {
     if (!currentUser.currentLocation) return;
     
+    // courses가 전달되지 않으면 기본 더미 데이터 사용
+    const coursesToDisplay = courses || nearbyGolfCourses;
+    
     // 거리 계산 및 정렬
-    const coursesWithDistance = nearbyGolfCourses.map(course => {
-        const distance = calculateDistance(
-            currentUser.currentLocation.lat,
-            currentUser.currentLocation.lng,
-            course.location.lat,
-            course.location.lng
-        );
+    const coursesWithDistance = coursesToDisplay.map(course => {
+        let distance;
+        
+        if (courses) {
+            // 2024년 데이터베이스 형식 (이미 distance가 계산됨)
+            distance = course.distance / 1000; // m를 km로 변환
+        } else {
+            // 기존 더미 데이터 형식
+            distance = calculateDistance(
+                currentUser.currentLocation.lat,
+                currentUser.currentLocation.lng,
+                course.location.lat,
+                course.location.lng
+            );
+        }
+        
         return { ...course, distance: distance };
     }).sort((a, b) => a.distance - b.distance);
     
@@ -820,22 +850,35 @@ function showNearbyGolfCourses() {
     const nearbyCourses = document.getElementById('nearby-courses');
     const coursesList = document.getElementById('nearby-courses-list');
     
-    coursesList.innerHTML = coursesWithDistance.slice(0, 4).map(course => `
-        <div class="nearby-course-card" onclick="selectGolfCourseFromNearby('${course.id}')">
-            <div class="course-header">
-                <div class="course-name">${course.name}</div>
-                <div class="course-distance">${course.distance}km</div>
+    if (!nearbyCourses || !coursesList) return;
+    
+    coursesList.innerHTML = coursesWithDistance.slice(0, 4).map(course => {
+        // 2024년 데이터베이스 형식과 기존 형식 모두 지원
+        const courseName = course.name || course.golfCourse;
+        const courseAddress = course.address || '주소 정보 없음';
+        const courseDistance = course.distance ? `${course.distance.toFixed(1)}km` : '거리 계산 중';
+        const courseHoles = course.holes ? `${course.holes}홀` : '';
+        const courseType = course.type || '';
+        
+        return `
+            <div class="nearby-course-card" onclick="selectGolfCourseFromNearby('${course.id}')">
+                <div class="course-header">
+                    <div class="course-name">${courseName}</div>
+                    <div class="course-distance">${courseDistance}</div>
+                </div>
+                <div class="course-meta">📍 ${courseAddress}</div>
+                <div class="course-meta">🏌️ ${courseHoles} ${courseType}</div>
+                ${course.status ? `
+                <div class="course-status">
+                    <span class="status-badge status-${course.status}">
+                        ${getStatusText(course.status)}
+                    </span>
+                    ${course.weather ? `<span class="status-badge">${getWeatherEmoji(course.weather)} ${getWeatherText(course.weather)}</span>` : ''}
+                </div>
+                ` : ''}
             </div>
-            <div class="course-meta">📍 ${course.address}</div>
-            <div class="course-meta">⏱️ ${course.lastUpdate} 업데이트</div>
-            <div class="course-status">
-                <span class="status-badge status-${course.status}">
-                    ${getStatusText(course.status)}
-                </span>
-                <span class="status-badge">${getWeatherEmoji(course.weather)} ${getWeatherText(course.weather)}</span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     nearbyCourses.style.display = 'block';
 }
@@ -853,8 +896,24 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     return Math.round(distance * 10) / 10; // 소수점 첫째자리까지
 }
 
-// 근처 골프장에서 선택
+// 근처 골프장에서 선택 (2024년 데이터베이스 형식 지원)
 function selectGolfCourseFromNearby(courseId) {
+    // 2024년 데이터베이스에서 골프장 찾기
+    if (window.GolfCoursesService2024) {
+        const course = window.GolfCoursesService2024.getGolfCourseById(courseId);
+        if (course) {
+            // 후기 작성 탭으로 이동
+            showReviewTab('write');
+            
+            // 골프장 선택 처리
+            selectGolfCourse(course);
+            
+            showToast(`${course.name}이 선택되었습니다!`);
+            return;
+        }
+    }
+    
+    // 기존 더미 데이터에서 골프장 찾기
     const course = nearbyGolfCourses.find(c => c.id == courseId);
     if (course) {
         // 후기 작성 탭으로 이동
@@ -879,8 +938,8 @@ function showQuickWrite() {
     }, 500);
 }
 
-// 위치 기반 골프장 감지 (후기 작성에서)
-function detectCurrentLocation() {
+// 위치 기반 골프장 감지 (후기 작성에서) - 2024년 데이터베이스 사용
+async function detectCurrentLocation() {
     if (!navigator.geolocation) {
         alert('이 브라우저는 위치 서비스를 지원하지 않습니다.');
         return;
@@ -888,36 +947,60 @@ function detectCurrentLocation() {
     
     const btn = event.target;
     const originalText = btn.innerHTML;
-                btn.innerHTML = '<span class="location-pulse">📍</span> 주변 골프장 찾는 중...';
-            btn.disabled = true;
+    btn.innerHTML = '<span class="location-pulse">📍</span> 주변 골프장 찾는 중...';
+    btn.disabled = true;
     
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
-            currentUser.currentLocation = { lat: latitude, lng: longitude };
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            });
+        });
+        
+        const { latitude, longitude } = position.coords;
+        currentUser.currentLocation = { lat: latitude, lng: longitude };
+        
+        // 2024년 완전한 데이터베이스에서 주변 골프장 검색
+        if (window.GolfCoursesService2024) {
+            const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
+                latitude, 
+                longitude, 
+                10000 // 10km 반경
+            );
             
             // 근처 골프장 추천 표시
+            showRecommendedCourses(nearbyGolfCourses);
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+        } else {
+            // 서비스가 없으면 기본 더미 데이터 사용
             showRecommendedCourses();
             
             btn.innerHTML = originalText;
             btn.disabled = false;
             
             showToast('✅ 주변 골프장을 찾았습니다!');
-        },
-        (error) => {
-            console.error('위치 오류:', error);
-            alert('위치를 확인할 수 없습니다. 위치 권한을 허용해주세요.');
-            btn.innerHTML = originalText;
-            btn.disabled = false;
         }
-    );
+        
+    } catch (error) {
+        console.error('위치 오류:', error);
+        showToast('⚠️ 위치를 확인할 수 없습니다. 위치 권한을 허용해주세요.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
 }
 
-// 추천 골프장 표시 (후기 작성용)
-function showRecommendedCourses() {
+// 추천 골프장 표시 (후기 작성용) - 2024년 데이터베이스 형식 지원
+function showRecommendedCourses(courses = null) {
     if (!currentUser.currentLocation) return;
     
-    const coursesWithDistance = nearbyGolfCourses.map(course => {
+    // courses가 전달되지 않으면 기본 더미 데이터 사용
+    const coursesToDisplay = courses || nearbyGolfCourses.map(course => {
         const distance = calculateDistance(
             currentUser.currentLocation.lat,
             currentUser.currentLocation.lng,
@@ -925,26 +1008,36 @@ function showRecommendedCourses() {
             course.location.lng
         );
         return { ...course, distance: distance };
-    }).sort((a, b) => a.distance - b.distance);
+    });
+    
+    // 거리순 정렬
+    const sortedCourses = coursesToDisplay.sort((a, b) => a.distance - b.distance);
     
     const recommendedSection = document.getElementById('recommended-courses');
     const coursesList = document.getElementById('nearby-courses-for-review');
     
-    coursesList.innerHTML = coursesWithDistance.slice(0, 5).map(course => `
-        <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
-            <div class="course-header">
-                <div class="course-name">${course.name}</div>
-                <div class="course-distance">${course.distance}km</div>
+    if (!recommendedSection || !coursesList) return;
+    
+    coursesList.innerHTML = sortedCourses.slice(0, 5).map(course => {
+        // 2024년 데이터베이스 형식과 기존 형식 모두 지원
+        const courseName = course.name || course.golfCourse;
+        const courseAddress = course.address || '주소 정보 없음';
+        const courseDistance = course.distance ? `${course.distance.toFixed(1)}km` : '거리 계산 중';
+        const courseHoles = course.holes ? `${course.holes}홀` : '';
+        const courseType = course.type || '';
+        
+        return `
+            <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
+                <div class="course-header">
+                    <div class="course-name">${courseName}</div>
+                    <div class="course-distance">${courseDistance}</div>
+                </div>
+                <div class="course-meta">📍 ${courseAddress}</div>
+                <div class="course-meta">🏌️ ${courseHoles} ${courseType}</div>
+                ${course.lastUpdate ? `<div class="course-meta">⏱️ ${course.lastUpdate} 최신 정보</div>` : ''}
             </div>
-            <div class="course-meta">📍 ${course.address}</div>
-            <div class="course-meta">⏱️ ${course.lastUpdate} 최신 정보</div>
-            <div class="course-status">
-                <span class="status-badge status-${course.status}">
-                    ${getStatusText(course.status)}
-                </span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     recommendedSection.style.display = 'block';
 }

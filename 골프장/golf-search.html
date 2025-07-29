@@ -784,6 +784,10 @@
     <script src="services/map-service.js"></script>
     <script src="services/review-location-service.js"></script>
     
+    <!-- 2024년 완전한 골프장 데이터베이스 -->
+    <script src="data/golf-courses-complete-2024.js"></script>
+    <script src="services/golf-courses-service-2024.js"></script>
+    
     <!-- JavaScript -->
     <script src="script.js"></script>
     <script>
@@ -796,11 +800,78 @@
             document.getElementById(tabName + '-search').classList.add('active');
         }
 
+        // 2024년 완전한 데이터 기반 지역별 골프장 검색
+        async function searchByRegion(region) {
+            try {
+                showToast(`${region} 지역의 골프장을 검색 중...`);
+                
+                const golfCourses = window.GolfCoursesService2024.searchGolfCoursesByRegion(region);
+                
+                // 검색 결과 표시
+                const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
+                displaySearchResults(convertedResults);
+                
+                showToast(`✅ ${golfCourses.length}개 골프장을 찾았습니다!`);
+                
+            } catch (error) {
+                console.error('지역 검색 실패:', error);
+                showToast('⚠️ 검색 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 2024년 완전한 데이터 기반 골프장명 검색
+        async function searchByName() {
+            const query = document.getElementById('golf-course-search').value;
+            
+            if (!query || query.trim().length < 2) {
+                showToast('골프장명을 2글자 이상 입력해주세요.');
+                return;
+            }
+            
+            try {
+                showToast('골프장을 검색 중...');
+                
+                const golfCourses = window.GolfCoursesService2024.searchGolfCourseByName(query.trim());
+                
+                // 검색 결과 표시
+                const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
+                displaySearchResults(convertedResults);
+                
+                showToast(`✅ ${golfCourses.length}개 골프장을 찾았습니다!`);
+                
+            } catch (error) {
+                console.error('이름 검색 실패:', error);
+                showToast('⚠️ 검색 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 검색 결과를 기존 displaySearchResults 형식으로 변환
+        function convertApiResultsToDisplayFormat(golfCourses) {
+            return golfCourses.map(course => ({
+                name: course.name,
+                region: course.region,
+                type: course.type || '골프장',
+                rating: course.rating || (Math.random() * 2 + 3).toFixed(1), // 임시 평점
+                price: course.price || Math.floor(Math.random() * 100000 + 80000).toLocaleString(), // 임시 가격
+                distance: course.distanceText || null,
+                phone: course.phone,
+                address: course.address,
+                holes: course.holes,
+                totalArea: course.totalArea
+            }));
+        }
+
         // 검색 결과 정렬
         function sortResults(sortType) {
             // 정렬 로직 구현
             showToast(`${sortType}으로 정렬되었습니다.`);
         }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏌️ GolfLoop 골프장 찾기 페이지 로드됨');
+            console.log('📍 2024년 완전한 골프장 데이터베이스 기반 검색 기능 활성화됨');
+        });
     </script>
 </body>
 </html> 
