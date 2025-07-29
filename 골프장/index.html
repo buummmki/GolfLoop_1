@@ -688,6 +688,10 @@
     <script src="services/location-service.js"></script>
     <script src="services/review-location-service.js"></script>
     
+    <!-- 문화체육관광부 골프장 데이터베이스 -->
+    <script src="data/golf-courses-database.js"></script>
+    <script src="services/golf-courses-service.js"></script>
+    
     <!-- 기존 스크립트 -->
     <script src="script.js"></script>
 
@@ -695,7 +699,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🏌️ GolfLoop - Golf Community Platform Loaded');
-            console.log('📍 실제 API 기반 검색 기능 활성화됨');
+            console.log('📍 문화체육관광부 골프장 데이터베이스 로드됨');
             
             // 골프장 선택 이벤트 리스너
             window.addEventListener('golfCourseSelected', function(event) {
@@ -710,7 +714,7 @@
             });
         });
 
-        // 실제 API 기반 위치 기반 골프장 찾기
+        // 문화체육관광부 데이터 기반 위치 기반 골프장 찾기
         async function requestLocation() {
             try {
                 showToast('내 주변 골프장을 찾는 중...');
@@ -718,8 +722,8 @@
                 // 사용자 위치 가져오기
                 const userLocation = await window.LocationService.getUserLocation();
                 
-                // 주변 골프장 검색
-                const nearbyGolfCourses = await window.LocationService.searchNearbyGolfCourses(
+                // 주변 골프장 검색 (문화체육관광부 데이터 사용)
+                const nearbyGolfCourses = window.GolfCoursesService.searchNearbyGolfCourses(
                     userLocation.latitude,
                     userLocation.longitude,
                     10000 // 10km 반경
@@ -747,7 +751,7 @@
             }
         }
 
-        // 실제 API 기반 후기 작성 위치 감지
+        // 문화체육관광부 데이터 기반 후기 작성 위치 감지
         async function detectCurrentLocation() {
             try {
                 const recommendations = await window.ReviewLocationService.detectAndRecommendGolfCourses();
@@ -759,12 +763,12 @@
             }
         }
 
-        // 실제 API 기반 지역별 골프장 검색
+        // 문화체육관광부 데이터 기반 지역별 골프장 검색
         async function searchByRegion(region) {
             try {
                 showToast(`${region} 지역의 골프장을 검색 중...`);
                 
-                const golfCourses = await window.LocationService.searchGolfCoursesByRegion(region);
+                const golfCourses = window.GolfCoursesService.searchGolfCoursesByRegion(region);
                 
                 // 검색 결과 표시
                 const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
@@ -778,7 +782,7 @@
             }
         }
 
-        // 실제 API 기반 골프장명 검색
+        // 문화체육관광부 데이터 기반 골프장명 검색
         async function searchByName(query) {
             if (!query || query.trim().length < 2) {
                 showToast('골프장명을 2글자 이상 입력해주세요.');
@@ -788,7 +792,7 @@
             try {
                 showToast('골프장을 검색 중...');
                 
-                const golfCourses = await window.LocationService.searchGolfCourseByName(query.trim());
+                const golfCourses = window.GolfCoursesService.searchGolfCourseByName(query.trim());
                 
                 // 검색 결과 표시
                 const convertedResults = convertApiResultsToDisplayFormat(golfCourses);
@@ -802,15 +806,18 @@
             }
         }
 
-        // API 검색 결과를 기존 displaySearchResults 형식으로 변환
+        // 검색 결과를 기존 displaySearchResults 형식으로 변환
         function convertApiResultsToDisplayFormat(golfCourses) {
             return golfCourses.map(course => ({
-                name: course.name || course.place_name,
-                region: course.region || course.address_name?.split(' ')[0] || '지역정보없음',
-                type: '골프장',
-                rating: (Math.random() * 2 + 3).toFixed(1), // 임시 평점
-                price: Math.floor(Math.random() * 100000 + 80000).toLocaleString(), // 임시 가격
-                distance: course.distance ? `${(course.distance / 1000).toFixed(1)}km` : null
+                name: course.name,
+                region: course.region,
+                type: course.type || '골프장',
+                rating: course.rating || (Math.random() * 2 + 3).toFixed(1), // 임시 평점
+                price: course.price || Math.floor(Math.random() * 100000 + 80000).toLocaleString(), // 임시 가격
+                distance: course.distanceText || null,
+                phone: course.phone,
+                address: course.address,
+                holes: course.holes
             }));
         }
 
@@ -818,15 +825,18 @@
         function checkApiStatus() {
             const hasKakao = typeof kakao !== 'undefined';
             const hasConfig = typeof window.GolfLoopAPI !== 'undefined';
-            const hasServices = typeof window.LocationService !== 'undefined';
+            const hasDatabase = typeof window.GolfCoursesDatabase !== 'undefined';
+            const hasService = typeof window.GolfCoursesService !== 'undefined';
             
             console.log('📊 API 상태 체크:');
             console.log('- 카카오 SDK:', hasKakao ? '✅' : '❌');
             console.log('- API 설정:', hasConfig ? '✅' : '❌');
-            console.log('- 위치 서비스:', hasServices ? '✅' : '❌');
+            console.log('- 골프장 데이터베이스:', hasDatabase ? '✅' : '❌');
+            console.log('- 골프장 서비스:', hasService ? '✅' : '❌');
             
-            if (!hasKakao) {
-                console.log('ℹ️ 카카오 SDK가 로드되지 않았지만, 더미 데이터로 정상 작동합니다.');
+            if (hasDatabase) {
+                const stats = window.GolfCoursesService.getGolfCourseStats();
+                console.log(`📈 골프장 통계: 총 ${stats.total}개 골프장`);
             }
         }
 
