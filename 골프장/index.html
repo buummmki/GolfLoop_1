@@ -371,6 +371,12 @@
                 <h2 class="section-title">골프장 찾기</h2>
                 <p class="section-subtitle">원하는 조건으로 골프장을 찾아보세요</p>
                 
+                <!-- 카카오 지도 섹션 추가 -->
+                <div class="map-section">
+                    <h3>🗺️ 골프장 지도</h3>
+                    <div id="kakao-map" style="width:100%;height:400px;margin:20px 0;"></div>
+                </div>
+                
                 <div class="search-form">
                     <div class="search-tabs">
                         <button class="search-tab-btn active" onclick="showSearchTab('region')">지역별 검색</button>
@@ -699,7 +705,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🏌️ GolfLoop - Golf Community Platform Loaded');
-            console.log('📍 문화체육관광부 골프장 데이터베이스 로드됨');
+            console.log('📊 GolfLoop Database v3.0 - 2024년 전국 골프장 현황 데이터 로드 완료');
             
             // 골프장 선택 이벤트 리스너
             window.addEventListener('golfCourseSelected', function(event) {
@@ -719,20 +725,37 @@
             try {
                 showToast('내 주변 골프장을 찾는 중...');
                 
-                // 사용자 위치 가져오기
-                const userLocation = await window.LocationService.getUserLocation();
-                
-                // 주변 골프장 검색 (2024년 완전한 데이터 사용)
-                const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    10000 // 10km 반경
-                );
+                // script.js의 requestLocation 함수 직접 호출
+                if (typeof window.requestLocation === 'function') {
+                    await window.requestLocation();
+                } else {
+                    // fallback: 기본 위치 기반 검색
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 300000
+                        });
+                    });
+                    
+                    const { latitude, longitude } = position.coords;
+                    
+                    // 2024년 완전한 데이터베이스에서 주변 골프장 검색
+                    if (window.GolfCoursesService2024) {
+                        const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
+                            latitude, 
+                            longitude, 
+                            10000 // 10km 반경
+                        );
 
-                // 기존 함수에 실제 데이터 전달
-                showNearbyGolfCourses(nearbyGolfCourses);
-                
-                showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+                        // 기존 함수에 실제 데이터 전달
+                        showNearbyGolfCourses(nearbyGolfCourses);
+                        
+                        showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 찾았습니다!`);
+                    } else {
+                        showToast('⚠️ 골프장 데이터베이스를 불러올 수 없습니다.');
+                    }
+                }
                 
             } catch (error) {
                 console.error('위치 기반 검색 실패:', error);
@@ -754,8 +777,37 @@
         // 2024년 완전한 데이터 기반 후기 작성 위치 감지
         async function detectCurrentLocation() {
             try {
-                const recommendations = await window.ReviewLocationService.detectAndRecommendGolfCourses();
-                showToast(`✅ ${recommendations.length}개 골프장을 추천합니다!`);
+                // script.js의 detectCurrentLocation 함수 직접 호출
+                if (typeof window.detectCurrentLocation === 'function') {
+                    await window.detectCurrentLocation();
+                } else {
+                    // fallback: 기본 위치 기반 검색
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 300000
+                        });
+                    });
+                    
+                    const { latitude, longitude } = position.coords;
+                    
+                    // 2024년 완전한 데이터베이스에서 주변 골프장 검색
+                    if (window.GolfCoursesService2024) {
+                        const nearbyGolfCourses = window.GolfCoursesService2024.searchNearbyGolfCourses(
+                            latitude, 
+                            longitude, 
+                            10000 // 10km 반경
+                        );
+
+                        // 추천 골프장 표시
+                        showRecommendedCourses(nearbyGolfCourses);
+                        
+                        showToast(`✅ ${nearbyGolfCourses.length}개 골프장을 추천합니다!`);
+                    } else {
+                        showToast('⚠️ 골프장 데이터베이스를 불러올 수 없습니다.');
+                    }
+                }
                 
             } catch (error) {
                 console.error('위치 기반 추천 실패:', error);
@@ -822,6 +874,40 @@
             }));
         }
 
+        // 추천 골프장 표시 (후기 작성용) - 2024년 데이터베이스 형식 지원
+        function showRecommendedCourses(courses = null) {
+            if (!courses || courses.length === 0) {
+                showToast('⚠️ 주변에 골프장이 없습니다.');
+                return;
+            }
+            
+            const recommendedSection = document.getElementById('recommended-courses');
+            const coursesList = document.getElementById('nearby-courses-for-review');
+            
+            if (!recommendedSection || !coursesList) return;
+            
+            coursesList.innerHTML = courses.slice(0, 5).map(course => {
+                const courseName = course.name || course.golfCourse;
+                const courseAddress = course.address || '주소 정보 없음';
+                const courseDistance = course.distance ? `${(course.distance / 1000).toFixed(1)}km` : '거리 계산 중';
+                const courseHoles = course.holes ? `${course.holes}홀` : '';
+                const courseType = course.type || '';
+                
+                return `
+                    <div class="course-option" onclick="selectGolfCourse(${JSON.stringify(course).replace(/"/g, '&quot;')})">
+                        <div class="course-header">
+                            <div class="course-name">${courseName}</div>
+                            <div class="course-distance">${courseDistance}</div>
+                        </div>
+                        <div class="course-meta">📍 ${courseAddress}</div>
+                        <div class="course-meta">🏌️ ${courseHoles} ${courseType}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            recommendedSection.style.display = 'block';
+        }
+
         // API 상태 확인 (개발용)
         function checkApiStatus() {
             const hasKakao = typeof kakao !== 'undefined';
@@ -829,20 +915,94 @@
             const hasDatabase = typeof window.GolfCoursesComplete2024 !== 'undefined';
             const hasService = typeof window.GolfCoursesService2024 !== 'undefined';
             
-            console.log('📊 API 상태 체크:');
-            console.log('- 카카오 SDK:', hasKakao ? '✅' : '❌');
-            console.log('- API 설정:', hasConfig ? '✅' : '❌');
-            console.log('- 2024년 골프장 데이터베이스:', hasDatabase ? '✅' : '❌');
-            console.log('- 2024년 골프장 서비스:', hasService ? '✅' : '❌');
+            console.log('🔧 GolfLoop System Status Check:');
+            console.log('- Kakao Maps SDK:', hasKakao ? '✅ Loaded' : '❌ Not Available');
+            console.log('- GolfLoop API Config:', hasConfig ? '✅ Ready' : '❌ Missing');
+            console.log('- Golf Course Database v3.0:', hasDatabase ? '✅ Loaded' : '❌ Failed');
+            console.log('- Golf Course Service v3.0:', hasService ? '✅ Active' : '❌ Inactive');
             
             if (hasDatabase) {
                 const stats = window.GolfCoursesService2024.getGolfCourseStats();
-                console.log(`📈 골프장 통계: 총 ${stats.total}개 골프장`);
+                console.log(`📊 Database Statistics: ${stats.total} golf courses available`);
+            }
+            
+            // 카카오 SDK가 로드되지 않았다면 다시 시도
+            if (!hasKakao) {
+                console.log('⏳ Waiting for Kakao Maps SDK to load...');
+                setTimeout(checkApiStatus, 2000); // 2초 후 다시 확인
             }
         }
 
-        // 개발 환경에서 API 상태 확인
-        setTimeout(checkApiStatus, 1000);
+        // 카카오 SDK 로드 완료 대기
+        function waitForKakaoSDK() {
+            if (typeof kakao !== 'undefined') {
+                console.log('🗺️ Kakao Maps SDK loaded successfully');
+                checkApiStatus();
+                initKakaoMap(); // 카카오 지도 초기화
+            } else {
+                setTimeout(waitForKakaoSDK, 500); // 0.5초마다 확인
+            }
+        }
+
+        // 카카오 지도 초기화
+        function initKakaoMap() {
+            try {
+                const mapContainer = document.getElementById('kakao-map');
+                if (!mapContainer) return;
+
+                // 서울 시청을 중심으로 지도 생성
+                const mapOption = {
+                    center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 시청
+                    level: 8 // 지도의 확대 레벨
+                };
+
+                const map = new kakao.maps.Map(mapContainer, mapOption);
+                
+                // 골프장 마커 추가
+                if (window.GolfCoursesService2024) {
+                    const allCourses = window.GolfCoursesService2024.getAllGolfCourses();
+                    
+                    allCourses.forEach(course => {
+                        if (course.latitude && course.longitude) {
+                            const position = new kakao.maps.LatLng(course.latitude, course.longitude);
+                            
+                            // 마커 생성
+                            const marker = new kakao.maps.Marker({
+                                position: position
+                            });
+                            
+                            // 마커를 지도에 표시
+                            marker.setMap(map);
+                            
+                            // 인포윈도우 생성
+                            const infowindow = new kakao.maps.InfoWindow({
+                                content: `
+                                    <div style="padding:10px;min-width:200px;">
+                                        <h4 style="margin:0 0 5px 0;color:#333;">${course.name}</h4>
+                                        <p style="margin:0 0 3px 0;color:#666;">📍 ${course.address}</p>
+                                        <p style="margin:0 0 3px 0;color:#666;">🏌️ ${course.holes}홀 ${course.type}</p>
+                                        <p style="margin:0;color:#666;">📞 ${course.phone}</p>
+                                    </div>
+                                `
+                            });
+                            
+                            // 마커 클릭 시 인포윈도우 표시
+                            kakao.maps.event.addListener(marker, 'click', function() {
+                                infowindow.open(map, marker);
+                            });
+                        }
+                    });
+                    
+                    console.log(`🗺️ Map initialization complete: ${allCourses.length} golf course markers added`);
+                }
+                
+            } catch (error) {
+                console.error('❌ Kakao Maps initialization failed:', error);
+            }
+        }
+
+        // 개발 환경에서 API 상태 확인 (카카오 SDK 로드 완료 후)
+        setTimeout(waitForKakaoSDK, 1000);
     </script>
 </body>
 </html> 

@@ -27,7 +27,7 @@ class GolfCoursesService2024 {
         const courses = this.database[region] || [];
         this.cache.set(cacheKey, courses);
         
-        console.log(`${region} 지역 ${courses.length}개 골프장 검색 완료`);
+        console.log(`🔍 Region search completed: ${courses.length} golf courses found in ${region}`);
         return courses;
     }
 
@@ -49,7 +49,7 @@ class GolfCoursesService2024 {
             });
         });
 
-        console.log(`"${query}" 검색 결과: ${results.length}개 골프장`);
+        console.log(`🔍 Name search completed: ${results.length} golf courses found for "${query}"`);
         return results;
     }
 
@@ -64,25 +64,31 @@ class GolfCoursesService2024 {
         const allCourses = this.getAllGolfCourses();
         const nearbyCourses = [];
 
-        allCourses.forEach(course => {
-            const distance = this.calculateDistance(
-                latitude, longitude,
-                course.latitude, course.longitude
-            );
+        console.log(`위치 기반 검색 시작: 위도 ${latitude}, 경도 ${longitude}, 반경 ${radius}m`);
 
-            if (distance * 1000 <= radius) { // km를 m로 변환
-                nearbyCourses.push({
-                    ...course,
-                    distance: distance * 1000, // m 단위로 저장
-                    distanceText: this.formatDistance(distance * 1000)
-                });
+        allCourses.forEach(course => {
+            // 위도/경도가 있는 경우에만 거리 계산
+            if (course.latitude && course.longitude) {
+                const distance = this.calculateDistance(
+                    latitude, longitude,
+                    course.latitude, course.longitude
+                );
+
+                // radius는 미터 단위, distance는 km 단위이므로 1000을 곱해서 비교
+                if (distance * 1000 <= radius) {
+                    nearbyCourses.push({
+                        ...course,
+                        distance: distance * 1000, // m 단위로 저장
+                        distanceText: this.formatDistance(distance * 1000)
+                    });
+                }
             }
         });
 
         // 거리순 정렬
         nearbyCourses.sort((a, b) => a.distance - b.distance);
 
-        console.log(`주변 ${radius/1000}km 내 ${nearbyCourses.length}개 골프장 검색 완료`);
+        console.log(`📍 Nearby search completed: ${nearbyCourses.length} golf courses found within ${radius/1000}km radius`);
         return nearbyCourses;
     }
 
@@ -169,7 +175,7 @@ class GolfCoursesService2024 {
                     ...updates,
                     lastUpdate: new Date().toISOString().split('T')[0]
                 };
-                console.log(`골프장 정보 업데이트: ${id}`);
+                console.log(`✅ Golf course information updated: ${id}`);
                 return;
             }
         });
@@ -187,8 +193,10 @@ class GolfCoursesService2024 {
                 id: Date.now(),
                 date: new Date().toISOString().split('T')[0]
             });
-            console.log(`골프장 리뷰 추가: ${id}`);
+            console.log(`📝 Golf course review added: ${id}`);
+            return true;
         }
+        return false;
     }
 
     // 골프장 평점 계산
@@ -251,7 +259,7 @@ class GolfCoursesService2024 {
     // 캐시 클리어
     clearCache() {
         this.cache.clear();
-        console.log('골프장 데이터 캐시 클리어');
+        console.log('🗑️ Golf course data cache cleared');
     }
 }
 

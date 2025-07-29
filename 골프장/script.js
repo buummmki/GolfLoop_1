@@ -1286,6 +1286,6 @@ reviews.forEach((review, index) => {
 });
 
 console.log('🏌️ GolfLoop - Golf Community Platform Loaded');
-console.log('현재 사용자:', currentUser.name);
-console.log('보유 포인트:', currentUser.points);
-console.log('📍 골프장 정보 공유 기능 활성화됨'); 
+console.log('👤 Current User:', currentUser.name);
+console.log('💰 User Points:', currentUser.points);
+console.log('📍 Location-based golf course sharing feature activated'); 
