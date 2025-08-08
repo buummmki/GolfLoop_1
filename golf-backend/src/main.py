@@ -11,10 +11,14 @@ from src.routes.posts import posts_bp
 from src.routes.rounds import rounds_bp
 from src.routes.market import market_bp
 from src.routes.golf_courses import golf_courses_bp
+from src.routes.upload import upload_bp
 from src.models.database import init_sample_data
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
+
+# 파일 업로드 설정
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB 최대 업로드 크기
 
 # CORS 설정
 CORS(app, origins="*")
@@ -25,6 +29,7 @@ app.register_blueprint(posts_bp, url_prefix='/api')
 app.register_blueprint(rounds_bp, url_prefix='/api')
 app.register_blueprint(market_bp, url_prefix='/api')
 app.register_blueprint(golf_courses_bp, url_prefix='/api')
+app.register_blueprint(upload_bp, url_prefix='/api')
 
 # SQLite 데이터베이스 설정 (사용자 관리용)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
@@ -42,6 +47,13 @@ def serve(path):
     static_folder_path = app.static_folder
     if static_folder_path is None:
             return "Static folder not configured", 404
+
+    # uploads 폴더의 파일들은 직접 서빙
+    if path.startswith('static/uploads/'):
+        filename = path.replace('static/uploads/', '')
+        uploads_dir = os.path.join(static_folder_path, 'uploads')
+        if os.path.exists(os.path.join(uploads_dir, filename)):
+            return send_from_directory(uploads_dir, filename)
 
     if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
         return send_from_directory(static_folder_path, path)
